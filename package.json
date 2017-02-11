@@ -1,0 +1,30 @@
+{
+  "name": "komet",
+  "version": "0.0.1",
+  "description": "",
+  "main": "lib/index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "jest ./test/index.test.js",
+    "babel": "babel ./source/ -d ./lib/",
+    "esdoc": "esdoc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wilsson/komet.git"
+  },
+  "author": "wilsson <wilsonft83@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/wilsson/komet/issues"
+  },
+  "homepage": "https://github.com/wilsson/komet#readme",
+  "devDependencies": {
+    "babel-cli": "^6.22.2",
+    "babel-preset-es2015": "^6.22.0",
+    "esdoc": "^0.5.2",
+    "jest": "^18.1.0"
+  }
+}
