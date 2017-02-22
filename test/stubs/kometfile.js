@@ -1,7 +1,10 @@
 var komet = require('../../lib/index.js');
 komet.task({
 	alias:'css',
-	entry:'./one.js'
+	entry:'./css.js'
 });
-console.log("komet>>", komet);
-// test's
+
+komet.task({
+	alias:'js',
+	entry:'./js.js'
+});

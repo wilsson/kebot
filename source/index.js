@@ -1,11 +1,23 @@
+import EventEmitter from 'events';
+
 /**
  * Add a new task
- * @param {Object} options
+ * @param {Object} config
  */
-export function task(options){
-	/**
-	* @type {string} this.entry path of node script
-	*/
-
-	this.entry = options.entry;
+class Komet extends EventEmitter{
+	constructor(){
+		super();
+		this.tasks = {};
+	}
+	task(config){
+		this.tasks[config.alias] = config;
+	}
+	start() {
+		console.log("arguments->", arguments);
+		var args = Array.prototype.slice.call(arguments, 0);
+		console.log("args->", args);
+		console.log("tasks->", this.tasks);
+	}
 }
+let inst = new Komet();
+module.exports = inst;
