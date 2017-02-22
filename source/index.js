@@ -1,10 +1,6 @@
 import EventEmitter from 'events';
 import { exec } from 'child_process';
 
-/**
- * Add a new task
- * @param {Object} config
- */
 class Komet extends EventEmitter{
 	constructor(){
 		super();
@@ -19,6 +15,9 @@ class Komet extends EventEmitter{
 		}
 		this.tasks[config.alias] = config;
 	}
+	/**
+	* @param {array} ...args - Cli task argument.
+	*/
 	start(...args) {
 		let that = this;
 		let task = args[0];
@@ -33,6 +32,9 @@ class Komet extends EventEmitter{
 		}
 		that.runScript(taskRun);
 	}
+	/**
+	* @param {objet} taskRun - Configuration to run the script.
+	*/
 	runScript(taskRun){
 		let entry = taskRun.entry;
 		exec(`node ${entry}`, function(error, stdout, stderr){
