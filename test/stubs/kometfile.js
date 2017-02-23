@@ -2,10 +2,16 @@ var komet = require('../../lib/index.js');
 
 komet.task({
 	alias:'css',
-	entry:'./css.js'
+	entry:'./css.js',
+    dependencies:['sprite', 'fonts']
 });
 
 komet.task({
-	alias:'js',
-	entry:'./js.js'
+	alias:'sprite',
+	entry:'./sprite.js'
+});
+
+komet.task({
+	alias:'fonts',
+	entry:'./fonts.js'
 });

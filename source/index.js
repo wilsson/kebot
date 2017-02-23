@@ -13,6 +13,16 @@ class Komet extends EventEmitter{
 		if(config.entry && typeof config.entry !== 'string'){
 			throw new Error('Entry for script requires a name that is a string');
 		}
+		if(config.dependencies){
+			if(!Array.isArray(config.dependencies)){
+				throw new Error('Dependencies require a array');
+			}
+			config.dependencies.forEach(function(dep){
+				if(typeof dep !== 'string'){
+					throw new Error(`Dependency name ${dep} needs to be a string`);
+				}
+			});
+		}
 		this.tasks[config.alias] = config;
 	}
 	/**
