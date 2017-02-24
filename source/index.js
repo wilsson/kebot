@@ -1,11 +1,14 @@
 import EventEmitter from 'events';
-import { exec } from 'child_process';
+import * as _ from './helper.js';
 
 class Komet extends EventEmitter{
 	constructor(){
 		super();
 		this.tasks = {};
 	}
+	/**
+	 * @param {object} config - Whether it is dependent or not.
+	 */
 	task(config){
 		if(config.alias && typeof config.alias !== 'string'){
 			throw new Error('Alias for script requires a name that is a string');
@@ -26,34 +29,66 @@ class Komet extends EventEmitter{
 		this.tasks[config.alias] = config;
 	}
 	/**
-	* @param {array} ...args - Cli task argument.
-	*/
-	start(...args) {
+	 * @param {array} tastas - kask from cli.
+	 * @param {boolean} option -Whether it is dependent or not.
+	 */
+	start(task, option){
 		let that = this;
-		let task = args[0];
-		let taskRun;
+		let foundTask;
 		if(!task){
 			throw new Error('Not alias task for argument');
 		}
 		for(let alias in that.tasks){
 			if(alias === task){
-				taskRun = that.tasks[alias];
+				foundTask = that.tasks[alias];
 			}
 		}
-		that.runScript(taskRun);
+		if(foundTask){
+			that.armedTasks(foundTask, option);
+		}
 	}
 	/**
-	* @param {objet} taskRun - Configuration to run the script.
-	*/
-	runScript(taskRun){
-		let entry = taskRun.entry;
-		exec(`node ${entry}`, function(error, stdout, stderr){
-			if(error){
-				console.log(error);
-				return;
+	 * @param {array} tastas - kask from cli.
+	 * @param {boolean} option -Whether it is dependent or not.
+	 */
+	armedTasks(task, option){
+		let that = this;
+		if(task.dependsof && option){
+			that.dependencies(task);
+			//process.exit(0);
+		}else{
+			_.execute(task.entry);
+		}
+	}
+	/**
+	 * @param {object} task - Configuration to run the script with dependencies.
+	 */
+	dependencies(task){
+		let that = this;
+		let tasksRun = {};
+		let lengthTask = task.dependsof.length;
+		for(let alias in that.tasks){
+			for(let i = 0; i < lengthTask; i++){
+				if(alias === task.dependsof[i]){
+					tasksRun[alias] = that.tasks[alias];
+				}
 			}
-			console.log(stdout.trim());
-		});
+		}
+		tasksRun[task.alias] = task;
+		this.dependenciesRun(tasksRun);
+	}
+	/**
+	 * @param {object} tasksRun - All configurations to run.
+	 */
+	dependenciesRun(tasksRun){
+		let that = this;
+		let runRecursive = (tasksRun)=>{
+			if(Object.keys(tasksRun).length){
+				let task = _.shiftObject(tasksRun);
+				_.execute(task.entry, tasksRun, runRecursive);
+			}
+		};
+		runRecursive(tasksRun);
 	}
 }
 
