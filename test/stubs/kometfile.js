@@ -32,3 +32,8 @@ komet.task({
     entry:'./tasks/clean-html.js'
 });
 
+komet.task({
+    alias:'image',
+    entry:'./tasks/image.js'
+});
+

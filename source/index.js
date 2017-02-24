@@ -55,7 +55,6 @@ class Komet extends EventEmitter{
 		let that = this;
 		if(task.dependsof && option){
 			that.dependencies(task);
-			//process.exit(0);
 		}else{
 			_.execute(task.entry);
 		}
