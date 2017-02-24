@@ -18,9 +18,9 @@ export function shiftObject(object){
  * @param {function} callback
  */
 export function execute(entry, tasksRun, callback){
-    if(!fs.existsSync(entry)){
+	if(!fs.existsSync(entry)){
 		throw new Error(`Task file ${entry} not found`);
-    }
+	}
 	exec(`node ${entry}`, (error, stout, stderr)=>{
 		if(error){
 			console.log(error);
