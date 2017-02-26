@@ -1,15 +1,15 @@
 /**
- * @example
- * node ../../bin/komet.js komet css
- * node ../../bin/komet.js komet css -a
- */
+	* @example
+	* node ../../bin/komet.js komet css
+	* node ../../bin/komet.js komet css -a
+	*/
 
 var komet = require('../../lib/index.js');
 
 komet.task({
 	alias:'css',
 	entry:'./tasks/css.js',
-    dependsof:['sprite', 'fonts', 'otro']
+	dependsof:['sprite', 'fonts', 'otro']
 });
 
 komet.task({
@@ -23,17 +23,16 @@ komet.task({
 });
 
 komet.task({
-    alias:'pug',
-    entry:'./tasks/pug.js'
+	alias:'pug',
+	entry:'./tasks/pug.js'
 });
 
 komet.task({
-    alias:'clean-html',
-    entry:'./tasks/clean-html.js'
+	alias:'babel',
+	entry:'./tasks/babel.js'
 });
 
 komet.task({
-    alias:'image',
-    entry:'./tasks/image.js'
-});
-
+	alias:'static',
+	dependsof:['css', 'pug', 'babel']
+})

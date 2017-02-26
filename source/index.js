@@ -1,5 +1,5 @@
 import EventEmitter from 'events';
-import * as _ from './helper.js';
+import * as _ from './komet-util.js';
 
 class Komet extends EventEmitter{
 	constructor(){
@@ -60,7 +60,7 @@ class Komet extends EventEmitter{
 		if(task.dependsof && option){
 			that.dependencies(task);
 		}else{
-			_.execute(param);
+			_.execute(param);		
 		}
 	}
 	/**
