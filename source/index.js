@@ -53,10 +53,14 @@ class Komet extends EventEmitter{
 	 */
 	armedTasks(task, option){
 		let that = this;
+		let param = {
+			that:that,
+			task:task
+		}
 		if(task.dependsof && option){
 			that.dependencies(task);
 		}else{
-			_.execute(task.entry);
+			_.execute(param);
 		}
 	}
 	/**
@@ -81,10 +85,18 @@ class Komet extends EventEmitter{
 	 */
 	dependenciesRun(tasksRun){
 		let that = this;
+		let task;
+		let params;
 		let runRecursive = (tasksRun)=>{
 			if(Object.keys(tasksRun).length){
-				let task = _.shiftObject(tasksRun);
-				_.execute(task.entry, tasksRun, runRecursive);
+				task = _.shiftObject(tasksRun);
+				params = {
+					that:that,
+					task:task,
+					tasksRun:tasksRun,
+					callback:runRecursive
+				}
+				_.execute(params);
 			}
 		};
 		runRecursive(tasksRun);

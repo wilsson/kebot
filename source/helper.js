@@ -1,5 +1,6 @@
 import { exec } from 'child_process';
 import fs from 'fs';
+import prettyHrtime from 'pretty-hrtime';
 
 /**
  * @param {object} object - Object to treat.
@@ -13,19 +14,27 @@ export function shiftObject(object){
 
 
 /**
- * @param {string} entry - Script path.
- * @param {object} tasksRun - All configurations to run.
- * @param {function} callback
+ * @param {object} param
  */
-export function execute(entry, tasksRun, callback){
-	if(!fs.existsSync(entry)){
-		throw new Error(`Task file ${entry} not found`);
+export function execute(param){
+	let that = param.that;
+	let task = param.task;
+	let tasksRun = param.tasksRun;
+	let callback = param.callback;
+	if(!fs.existsSync(task.entry)){
+		throw new Error(`Task file ${task.entry} not found`);
 	}
-	exec(`node ${entry}`, (error, stout, stderr)=>{
+	let start = process.hrtime();
+	exec(`node ${task.entry}`, (error, stout, stderr)=>{
 		if(error){
 			console.log(error);
 			return;
 		}
+		let end = process.hrtime(start);
+		let args = {};
+		args.time = prettyHrtime(end);
+		args.task = task.alias;
+		that.emit('finish_task', args);
 		console.log(stout.trim());
 		if(callback && typeof callback === 'function'){
 			callback(tasksRun);
