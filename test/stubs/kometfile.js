@@ -7,8 +7,9 @@
 var komet = require('../../lib/index.js');
 
 komet.task({
-	alias:'css',
+	alias:"css",
 	entry:'./tasks/css.js',
+	//entry:"32343" ,
 	dependsof:['sprite', 'fonts', 'otro']
 });
 
@@ -35,4 +36,4 @@ komet.task({
 komet.task({
 	alias:'static',
 	dependsof:['css', 'pug', 'babel']
-})
+});

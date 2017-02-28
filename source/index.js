@@ -10,12 +10,7 @@ class Komet extends EventEmitter{
 	 * @param {object} config - Whether it is dependent or not.
 	 */
 	task(config){
-		if(config.alias && typeof config.alias !== 'string'){
-			throw new Error('Alias for script requires a name that is a string');
-		}
-		if(config.entry && typeof config.entry !== 'string'){
-			throw new Error('Entry for script requires a name that is a string');
-		}
+        this.orchestratorValidateString(config);
 		if(config.dependencies){
 			if(!Array.isArray(config.dependencies)){
 				throw new Error('Dependencies require a array');
@@ -28,9 +23,18 @@ class Komet extends EventEmitter{
 		}
 		this.tasks[config.alias] = config;
 	}
+    orchestratorValidateString(config){
+        this.validateString(config.alias);
+        this.validateString(config.entry);
+    }
+    validateString(entity){
+        if(entity && typeof entity !== 'string'){
+            throw new Error(`${entity} needs to be a string`);
+        }
+    }
 	/**
 	 * @param {array} tastas - kask from cli.
-	 * @param {boolean} option -Whether it is dependent or not.
+	 * @param {boolean} option - Whether it is dependent or not.
 	 */
 	start(task, option){
 		let that = this;
@@ -45,7 +49,9 @@ class Komet extends EventEmitter{
 		}
 		if(foundTask){
 			that.armedTasks(foundTask, option);
-		}
+		}else{
+            this.emit('task_not_found', task);
+        }
 	}
 	/**
 	 * @param {array} tastas - kask from cli.
@@ -56,12 +62,15 @@ class Komet extends EventEmitter{
 		let param = {
 			that:that,
 			task:task
-		}
+		};
 		if(task.dependsof && option){
 			that.dependencies(task);
 		}else{
-			_.execute(param);		
-		}
+			_.execute(param);
+        }
+        if(!task.entry && !option && task.dependsof){
+            that.emit("task_not_entry", task);
+        }
 	}
 	/**
 	 * @param {object} task - Configuration to run the script with dependencies.
@@ -95,7 +104,7 @@ class Komet extends EventEmitter{
 					task:task,
 					tasksRun:tasksRun,
 					callback:runRecursive
-				}
+				};
 				_.execute(params);
 			}
 		};

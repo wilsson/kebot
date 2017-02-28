@@ -21,27 +21,22 @@ export function execute(param){
 	let task = param.task;
 	let tasksRun = param.tasksRun;
 	let callback = param.callback;
-	/*
-	if(!fs.existsSync(task.entry)){
-		throw new Error(`Task file ${task.entry} not found ${task.alias}`);
-	}
-	*/
-	if(task.entry){
-		let start = process.hrtime();
-		exec(`node ${task.entry}`, (error, stout, stderr)=>{
-			if(error){
-				console.log(error);
-				return;
-			}
-			let end = process.hrtime(start);
-			let args = {};
-			args.time = prettyHrtime(end);
-			args.task = task.alias;
-			that.emit('finish_task', args);
-			console.log(stout.trim());
-			if(callback && typeof callback === 'function'){
-				callback(tasksRun);
-			}
-		});
-	}
+    if(task.entry){
+    	let start = process.hrtime();
+    	exec(`node ${task.entry}`, (error, stout, stderr)=>{
+    		if(error){
+                that.emit("task_error_entry", task.entry);
+    			return;
+    		}
+    		let end = process.hrtime(start);
+    		let args = {};
+    		args.time = prettyHrtime(end);
+    		args.task = task.alias;
+    		that.emit('finish_task', args);
+    		console.log(stout.trim());
+    		if(callback && typeof callback === 'function'){
+    			callback(tasksRun);
+    		}
+    	});
+    }
 }
