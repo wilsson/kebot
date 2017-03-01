@@ -4,7 +4,7 @@
 	* node ../../bin/komet.js komet css -a
 	*/
 
-var komet = require('../../lib/index.js');
+var komet = require('../../lib');
 
 komet.task({
 	alias:"css",
