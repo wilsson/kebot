@@ -3,7 +3,7 @@
     "__docId__": 0,
     "kind": "file",
     "name": "source/index.js",
-    "content": "/**\r\n * Add a new task\r\n * @param {Object} options\r\n */\r\nexport function task(options){\r\n\t/**\r\n\t* @type {string} this.entry path of node script\r\n\t*/\r\n\r\n\tthis.entry = options.entry;\r\n}",
+    "content": "import { Komet } from './komet.js';\r\n\r\nlet inst = new Komet();\r\nmodule.exports = inst;\r\n",
     "static": true,
     "longname": "source/index.js",
     "access": null,
@@ -12,19 +12,177 @@
   },
   {
     "__docId__": 1,
-    "kind": "function",
-    "name": "task",
+    "kind": "variable",
+    "name": "inst",
     "memberof": "source/index.js",
+    "static": true,
+    "longname": "source/index.js~inst",
+    "access": null,
+    "export": false,
+    "importPath": "komet/source/index.js",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 3,
+    "undocument": true,
+    "unknown": [
+      {
+        "tagName": "@_undocument",
+        "tagValue": ""
+      }
+    ],
+    "type": {
+      "types": [
+        "source/komet.js~Komet"
+      ]
+    }
+  },
+  {
+    "__docId__": 2,
+    "kind": "file",
+    "name": "source/komet-util.js",
+    "content": "import { exec } from 'child_process';\r\nimport fs from 'fs';\r\nimport prettyHrtime from 'pretty-hrtime';\r\n\r\n/**\r\n * @private\r\n * @param {object} object - Object to treat.\r\n */\r\nexport function shiftObject(object){\r\n\tlet key = Object.keys(object)[0];\r\n\tlet firstObject = object[key];\r\n\tdelete object[key];\r\n\treturn firstObject;\r\n}\r\n\r\n\r\n/**\r\n * @private\r\n * @param {object} param\r\n */\r\nexport function execute(param){\r\n\tlet that = param.that;\r\n\tlet task = param.task;\r\n\tlet tasksRun = param.tasksRun;\r\n\tlet callback = param.callback;\r\n    if(task.entry){\r\n    \tlet start = process.hrtime();\r\n    \texec(`node ${task.entry}`, (error, stout, stderr)=>{\r\n    \t\tif(error){\r\n                that.emit(\"task_error_entry\", task.entry);\r\n    \t\t\treturn;\r\n    \t\t}\r\n    \t\tlet end = process.hrtime(start);\r\n    \t\tlet args = {};\r\n    \t\targs.time = prettyHrtime(end);\r\n    \t\targs.task = task.alias;\r\n    \t\tthat.emit('finish_task', args);\r\n    \t\tconsole.log(stout.trim());\r\n    \t\tif(callback && typeof callback === 'function'){\r\n    \t\t\tcallback(tasksRun);\r\n    \t\t}\r\n    \t});\r\n    }\r\n}\r\n",
+    "static": true,
+    "longname": "source/komet-util.js",
+    "access": null,
+    "description": null,
+    "lineNumber": 1
+  },
+  {
+    "__docId__": 3,
+    "kind": "function",
+    "name": "shiftObject",
+    "memberof": "source/komet-util.js",
     "generator": false,
     "async": false,
     "static": true,
-    "longname": "source/index.js~task",
+    "longname": "source/komet-util.js~shiftObject",
+    "access": "private",
+    "export": true,
+    "importPath": "komet/source/komet-util.js",
+    "importStyle": "{shiftObject}",
+    "description": "",
+    "lineNumber": 9,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "object"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "object",
+        "description": "Object to treat."
+      }
+    ],
+    "return": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 4,
+    "kind": "function",
+    "name": "execute",
+    "memberof": "source/komet-util.js",
+    "generator": false,
+    "async": false,
+    "static": true,
+    "longname": "source/komet-util.js~execute",
+    "access": "private",
+    "export": true,
+    "importPath": "komet/source/komet-util.js",
+    "importStyle": "{execute}",
+    "description": "",
+    "lineNumber": 21,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "object"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "param",
+        "description": ""
+      }
+    ]
+  },
+  {
+    "__docId__": 5,
+    "kind": "file",
+    "name": "source/komet.js",
+    "content": "import EventEmitter from 'events';\r\nimport * as _ from './komet-util.js';\r\n\r\n/**\r\n * @since 0.0.1\r\n * @example\r\n * var komet = require(\"komet\");\r\n *\r\n * komet.task({\r\n *  alias:'task-one',\r\n *  entry:'task-one.js'\r\n * });\r\n */\r\nexport class Komet extends EventEmitter{\r\n\r\n\t/**\r\n\t * @private\r\n\t */\r\n\tconstructor(){\r\n\t\tsuper();\r\n\t\t/**\r\n\t\t * @private\r\n\t\t */\r\n\t\tthis.tasks = {};\r\n\t}\r\n\r\n\t/**\r\n\t * @desc Method for creating a task.\r\n\t * @param {Object} config - Task configuration object.\r\n\t * @param {string} config.alias - The alias of your task.\r\n\t * @param {string} config.entry - The path of your node script.\r\n\t * @param {Array} config.dependsof - Task dependencies.\r\n\t */\r\n\ttask(config){\r\n\t\tthis.orchestratorValidateString(config);\r\n\t\tif(config.dependencies){\r\n\t\t\tif(!Array.isArray(config.dependencies)){\r\n\t\t\t\tthrow new Error('Dependencies require a array');\r\n\t\t\t}\r\n\t\t\tconfig.dependencies.forEach(function(dep){\r\n\t\t\t\tif(typeof dep !== 'string'){\r\n\t\t\t\t\tthrow new Error(`Dependency name ${dep} needs to be a string`);\r\n\t\t\t\t}\r\n\t\t\t});\r\n\t\t}\r\n\t\tthis.tasks[config.alias] = config;\r\n\t}\r\n\r\n\t/**\r\n\t * @private\r\n\t */\r\n\torchestratorValidateString(config){\r\n\t\tthis.validateString(config.alias);\r\n\t\tthis.validateString(config.entry);\r\n\t}\r\n\r\n\t/**\r\n\t * @private\r\n\t */\r\n\tvalidateString(entity){\r\n\t\tif(entity && typeof entity !== 'string'){\r\n\t\t\tthrow new Error(`${entity} needs to be a string`);\r\n\t\t}\r\n\t}\r\n\r\n\r\n\t/**\r\n\t * @private\r\n\t * @param {array} tastas - kask from cli.\r\n\t * @param {boolean} option - Whether it is dependent or not.\r\n\t */\r\n\tstart(task, option){\r\n\t\tlet that = this;\r\n\t\tlet foundTask;\r\n\t\tif(!task){\r\n\t\t\tthrow new Error('Not alias task for argument');\r\n\t\t}\r\n\t\tfor(let alias in that.tasks){\r\n\t\t\tif(alias === task){\r\n\t\t\t\tfoundTask = that.tasks[alias];\r\n\t\t\t}\r\n\t\t}\r\n\t\tif(foundTask){\r\n\t\t\tthat.armedTasks(foundTask, option);\r\n\t\t}else{\r\n\t\t\tthis.emit('task_not_found', task);\r\n\t\t}\r\n\t}\r\n\r\n\t/**\r\n\t * @private\r\n\t * @param {array} tastas - kask from cli.\r\n\t * @param {boolean} option -Whether it is dependent or not.\r\n\t */\r\n\tarmedTasks(task, option){\r\n\t\tlet that = this;\r\n\t\tlet param = {\r\n\t\t\tthat:that,\r\n\t\t\ttask:task\r\n\t\t};\r\n\t\tif(task.dependsof && option){\r\n\t\t\tthat.dependencies(task);\r\n\t\t}else{\r\n\t\t\t_.execute(param);\r\n\t\t}\r\n\t\tif(!task.entry && !option && task.dependsof){\r\n\t\t\tthat.emit(\"task_not_entry\", task);\r\n\t\t}\r\n\t}\r\n\r\n\t/**\r\n\t * @private\r\n\t * @param {object} task - Configuration to run the script with dependencies.\r\n\t */\r\n\tdependencies(task){\r\n\t\tlet that = this;\r\n\t\tlet tasksRun = {};\r\n\t\tlet lengthTask = task.dependsof.length;\r\n\t\tfor(let alias in that.tasks){\r\n\t\t\tfor(let i = 0; i < lengthTask; i++){\r\n\t\t\t\tif(alias === task.dependsof[i]){\r\n\t\t\t\t\ttasksRun[alias] = that.tasks[alias];\r\n\t\t\t\t}\r\n\t\t\t}\r\n\t\t}\r\n\t\ttasksRun[task.alias] = task;\r\n\t\tthis.dependenciesRun(tasksRun);\r\n\t}\r\n\r\n\t/**\r\n\t * @private\r\n\t * @param {object} tasksRun - All configurations to run.\r\n\t */\r\n\tdependenciesRun(tasksRun){\r\n\t\tlet that = this;\r\n\t\tlet task;\r\n\t\tlet params;\r\n\t\tlet runRecursive = (tasksRun)=>{\r\n\t\t\tif(Object.keys(tasksRun).length){\r\n\t\t\t\ttask = _.shiftObject(tasksRun);\r\n\t\t\t\tparams = {\r\n\t\t\t\t\tthat:that,\r\n\t\t\t\t\ttask:task,\r\n\t\t\t\t\ttasksRun:tasksRun,\r\n\t\t\t\t\tcallback:runRecursive\r\n\t\t\t\t};\r\n\t\t\t\t_.execute(params);\r\n\t\t\t}\r\n\t\t};\r\n\t\trunRecursive(tasksRun);\r\n\t}\r\n}",
+    "static": true,
+    "longname": "source/komet.js",
+    "access": null,
+    "description": null,
+    "lineNumber": 1
+  },
+  {
+    "__docId__": 6,
+    "kind": "class",
+    "name": "Komet",
+    "memberof": "source/komet.js",
+    "static": true,
+    "longname": "source/komet.js~Komet",
     "access": null,
     "export": true,
-    "importPath": "komet/source/index.js",
-    "importStyle": "{task}",
-    "description": "Add a new task",
-    "lineNumber": 5,
+    "importPath": "komet/source/komet.js",
+    "importStyle": "{Komet}",
+    "description": "",
+    "examples": [
+      "var komet = require(\"komet\");\n\nkomet.task({\n alias:'task-one',\n entry:'task-one.js'\n});"
+    ],
+    "lineNumber": 14,
+    "since": "0.0.1",
+    "interface": false,
+    "extends": [
+      "events~EventEmitter"
+    ]
+  },
+  {
+    "__docId__": 7,
+    "kind": "constructor",
+    "name": "constructor",
+    "memberof": "source/komet.js~Komet",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "source/komet.js~Komet#constructor",
+    "access": "private",
+    "description": "",
+    "lineNumber": 19,
+    "params": []
+  },
+  {
+    "__docId__": 8,
+    "kind": "member",
+    "name": "tasks",
+    "memberof": "source/komet.js~Komet",
+    "static": false,
+    "longname": "source/komet.js~Komet#tasks",
+    "access": "private",
+    "description": "",
+    "lineNumber": 24,
+    "type": {
+      "types": [
+        "{}"
+      ]
+    }
+  },
+  {
+    "__docId__": 9,
+    "kind": "method",
+    "name": "task",
+    "memberof": "source/komet.js~Komet",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "source/komet.js~Komet#task",
+    "access": null,
+    "description": "Method for creating a task.",
+    "lineNumber": 34,
     "params": [
       {
         "nullable": null,
@@ -33,13 +191,205 @@
         ],
         "spread": false,
         "optional": false,
-        "name": "options",
-        "description": ""
+        "name": "config",
+        "description": "Task configuration object."
+      },
+      {
+        "nullable": null,
+        "types": [
+          "string"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "config.alias",
+        "description": "The alias of your task."
+      },
+      {
+        "nullable": null,
+        "types": [
+          "string"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "config.entry",
+        "description": "The path of your node script."
+      },
+      {
+        "nullable": null,
+        "types": [
+          "Array"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "config.dependsof",
+        "description": "Task dependencies."
       }
     ]
   },
   {
-    "__docId__": 3,
+    "__docId__": 10,
+    "kind": "method",
+    "name": "orchestratorValidateString",
+    "memberof": "source/komet.js~Komet",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "source/komet.js~Komet#orchestratorValidateString",
+    "access": "private",
+    "description": "",
+    "lineNumber": 52,
+    "params": [
+      {
+        "name": "config",
+        "types": [
+          "*"
+        ]
+      }
+    ]
+  },
+  {
+    "__docId__": 11,
+    "kind": "method",
+    "name": "validateString",
+    "memberof": "source/komet.js~Komet",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "source/komet.js~Komet#validateString",
+    "access": "private",
+    "description": "",
+    "lineNumber": 60,
+    "params": [
+      {
+        "name": "entity",
+        "types": [
+          "*"
+        ]
+      }
+    ]
+  },
+  {
+    "__docId__": 12,
+    "kind": "method",
+    "name": "start",
+    "memberof": "source/komet.js~Komet",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "source/komet.js~Komet#start",
+    "access": "private",
+    "description": "",
+    "lineNumber": 72,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "array"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "tastas",
+        "description": "kask from cli."
+      },
+      {
+        "nullable": null,
+        "types": [
+          "boolean"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "option",
+        "description": "Whether it is dependent or not."
+      }
+    ]
+  },
+  {
+    "__docId__": 13,
+    "kind": "method",
+    "name": "armedTasks",
+    "memberof": "source/komet.js~Komet",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "source/komet.js~Komet#armedTasks",
+    "access": "private",
+    "description": "",
+    "lineNumber": 95,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "array"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "tastas",
+        "description": "kask from cli."
+      },
+      {
+        "nullable": null,
+        "types": [
+          "boolean"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "option",
+        "description": "Whether it is dependent or not."
+      }
+    ]
+  },
+  {
+    "__docId__": 14,
+    "kind": "method",
+    "name": "dependencies",
+    "memberof": "source/komet.js~Komet",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "source/komet.js~Komet#dependencies",
+    "access": "private",
+    "description": "",
+    "lineNumber": 115,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "object"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "task",
+        "description": "Configuration to run the script with dependencies."
+      }
+    ]
+  },
+  {
+    "__docId__": 15,
+    "kind": "method",
+    "name": "dependenciesRun",
+    "memberof": "source/komet.js~Komet",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "source/komet.js~Komet#dependenciesRun",
+    "access": "private",
+    "description": "",
+    "lineNumber": 134,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "object"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "tasksRun",
+        "description": "All configurations to run."
+      }
+    ]
+  },
+  {
+    "__docId__": 17,
     "kind": "external",
     "name": "Infinity",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Infinity",
@@ -51,7 +401,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 4,
+    "__docId__": 18,
     "kind": "external",
     "name": "NaN",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/NaN",
@@ -63,7 +413,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 5,
+    "__docId__": 19,
     "kind": "external",
     "name": "undefined",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/undefined",
@@ -75,7 +425,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 6,
+    "__docId__": 20,
     "kind": "external",
     "name": "null",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/null",
@@ -87,7 +437,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 7,
+    "__docId__": 21,
     "kind": "external",
     "name": "Object",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object",
@@ -99,7 +449,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 8,
+    "__docId__": 22,
     "kind": "external",
     "name": "object",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object",
@@ -111,7 +461,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 9,
+    "__docId__": 23,
     "kind": "external",
     "name": "Function",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function",
@@ -123,7 +473,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 10,
+    "__docId__": 24,
     "kind": "external",
     "name": "function",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function",
@@ -135,7 +485,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 11,
+    "__docId__": 25,
     "kind": "external",
     "name": "Boolean",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean",
@@ -147,7 +497,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 12,
+    "__docId__": 26,
     "kind": "external",
     "name": "boolean",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean",
@@ -159,7 +509,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 13,
+    "__docId__": 27,
     "kind": "external",
     "name": "Symbol",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Symbol",
@@ -171,7 +521,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 14,
+    "__docId__": 28,
     "kind": "external",
     "name": "Error",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error",
@@ -183,7 +533,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 15,
+    "__docId__": 29,
     "kind": "external",
     "name": "EvalError",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/EvalError",
@@ -195,7 +545,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 16,
+    "__docId__": 30,
     "kind": "external",
     "name": "InternalError",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/InternalError",
@@ -207,7 +557,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 17,
+    "__docId__": 31,
     "kind": "external",
     "name": "RangeError",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RangeError",
@@ -219,7 +569,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 18,
+    "__docId__": 32,
     "kind": "external",
     "name": "ReferenceError",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ReferenceError",
@@ -231,7 +581,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 19,
+    "__docId__": 33,
     "kind": "external",
     "name": "SyntaxError",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/SyntaxError",
@@ -243,7 +593,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 20,
+    "__docId__": 34,
     "kind": "external",
     "name": "TypeError",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypeError",
@@ -255,7 +605,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 21,
+    "__docId__": 35,
     "kind": "external",
     "name": "URIError",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/URIError",
@@ -267,7 +617,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 22,
+    "__docId__": 36,
     "kind": "external",
     "name": "Number",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number",
@@ -279,7 +629,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 23,
+    "__docId__": 37,
     "kind": "external",
     "name": "number",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number",
@@ -291,7 +641,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 24,
+    "__docId__": 38,
     "kind": "external",
     "name": "Date",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date",
@@ -303,7 +653,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 25,
+    "__docId__": 39,
     "kind": "external",
     "name": "String",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String",
@@ -315,7 +665,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 26,
+    "__docId__": 40,
     "kind": "external",
     "name": "string",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String",
@@ -327,7 +677,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 27,
+    "__docId__": 41,
     "kind": "external",
     "name": "RegExp",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp",
@@ -339,7 +689,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 28,
+    "__docId__": 42,
     "kind": "external",
     "name": "Array",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array",
@@ -351,7 +701,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 29,
+    "__docId__": 43,
     "kind": "external",
     "name": "Int8Array",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int8Array",
@@ -363,7 +713,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 30,
+    "__docId__": 44,
     "kind": "external",
     "name": "Uint8Array",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint8Array",
@@ -375,7 +725,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 31,
+    "__docId__": 45,
     "kind": "external",
     "name": "Uint8ClampedArray",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint8ClampedArray",
@@ -387,7 +737,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 32,
+    "__docId__": 46,
     "kind": "external",
     "name": "Int16Array",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int16Array",
@@ -399,7 +749,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 33,
+    "__docId__": 47,
     "kind": "external",
     "name": "Uint16Array",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint16Array",
@@ -411,7 +761,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 34,
+    "__docId__": 48,
     "kind": "external",
     "name": "Int32Array",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array",
@@ -423,7 +773,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 35,
+    "__docId__": 49,
     "kind": "external",
     "name": "Uint32Array",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint32Array",
@@ -435,7 +785,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 36,
+    "__docId__": 50,
     "kind": "external",
     "name": "Float32Array",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array",
@@ -447,7 +797,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 37,
+    "__docId__": 51,
     "kind": "external",
     "name": "Float64Array",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array",
@@ -459,7 +809,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 38,
+    "__docId__": 52,
     "kind": "external",
     "name": "Map",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map",
@@ -471,7 +821,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 39,
+    "__docId__": 53,
     "kind": "external",
     "name": "Set",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set",
@@ -483,7 +833,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 40,
+    "__docId__": 54,
     "kind": "external",
     "name": "WeakMap",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakMap",
@@ -495,7 +845,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 41,
+    "__docId__": 55,
     "kind": "external",
     "name": "WeakSet",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakSet",
@@ -507,7 +857,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 42,
+    "__docId__": 56,
     "kind": "external",
     "name": "ArrayBuffer",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer",
@@ -519,7 +869,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 43,
+    "__docId__": 57,
     "kind": "external",
     "name": "DataView",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DataView",
@@ -531,7 +881,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 44,
+    "__docId__": 58,
     "kind": "external",
     "name": "JSON",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON",
@@ -543,7 +893,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 45,
+    "__docId__": 59,
     "kind": "external",
     "name": "Promise",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise",
@@ -555,7 +905,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 46,
+    "__docId__": 60,
     "kind": "external",
     "name": "Generator",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Generator",
@@ -567,7 +917,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 47,
+    "__docId__": 61,
     "kind": "external",
     "name": "GeneratorFunction",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/GeneratorFunction",
@@ -579,7 +929,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 48,
+    "__docId__": 62,
     "kind": "external",
     "name": "Reflect",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Reflect",
@@ -591,7 +941,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 49,
+    "__docId__": 63,
     "kind": "external",
     "name": "Proxy",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy",
@@ -604,7 +954,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 51,
+    "__docId__": 65,
     "kind": "external",
     "name": "CanvasRenderingContext2D",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D",
@@ -616,7 +966,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 52,
+    "__docId__": 66,
     "kind": "external",
     "name": "DocumentFragment",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/API/DocumentFragment",
@@ -628,7 +978,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 53,
+    "__docId__": 67,
     "kind": "external",
     "name": "Element",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/API/Element",
@@ -640,7 +990,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 54,
+    "__docId__": 68,
     "kind": "external",
     "name": "Event",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/API/Event",
@@ -652,7 +1002,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 55,
+    "__docId__": 69,
     "kind": "external",
     "name": "Node",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/API/Node",
@@ -664,7 +1014,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 56,
+    "__docId__": 70,
     "kind": "external",
     "name": "NodeList",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/API/NodeList",
@@ -676,7 +1026,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 57,
+    "__docId__": 71,
     "kind": "external",
     "name": "XMLHttpRequest",
     "externalLink": "https://developer.mozilla.org/en/docs/Web/API/XMLHttpRequest",
@@ -688,7 +1038,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 58,
+    "__docId__": 72,
     "kind": "external",
     "name": "AudioContext",
     "externalLink": "https://developer.mozilla.org/en/docs/Web/API/AudioContext",

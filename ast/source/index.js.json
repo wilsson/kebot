@@ -1,368 +1,309 @@
 {
   "type": "File",
   "start": 0,
-  "end": 183,
+  "end": 88,
   "loc": {
     "start": {
       "line": 1,
       "column": 0
     },
     "end": {
-      "line": 11,
-      "column": 1
+      "line": 5,
+      "column": 0
     }
   },
   "program": {
     "type": "Program",
     "start": 0,
-    "end": 183,
+    "end": 88,
     "loc": {
       "start": {
         "line": 1,
         "column": 0
       },
       "end": {
-        "line": 11,
-        "column": 1
+        "line": 5,
+        "column": 0
       }
     },
     "sourceType": "module",
     "body": [
       {
-        "type": "ExportNamedDeclaration",
-        "start": 57,
-        "end": 183,
+        "type": "ImportDeclaration",
+        "start": 0,
+        "end": 35,
         "loc": {
           "start": {
-            "line": 5,
+            "line": 1,
             "column": 0
           },
           "end": {
-            "line": 11,
-            "column": 1
+            "line": 1,
+            "column": 35
           }
         },
-        "specifiers": [],
-        "source": null,
-        "declaration": {
-          "type": "FunctionDeclaration",
-          "start": 64,
-          "end": 183,
-          "loc": {
-            "start": {
-              "line": 5,
-              "column": 7
-            },
-            "end": {
-              "line": 11,
-              "column": 1
-            }
-          },
-          "id": {
-            "type": "Identifier",
-            "start": 73,
-            "end": 77,
-            "loc": {
-              "start": {
-                "line": 5,
-                "column": 16
-              },
-              "end": {
-                "line": 5,
-                "column": 20
-              },
-              "identifierName": "task"
-            },
-            "name": "task",
-            "leadingComments": null
-          },
-          "generator": false,
-          "expression": false,
-          "async": false,
-          "params": [
-            {
-              "type": "Identifier",
-              "start": 78,
-              "end": 85,
-              "loc": {
-                "start": {
-                  "line": 5,
-                  "column": 21
-                },
-                "end": {
-                  "line": 5,
-                  "column": 28
-                },
-                "identifierName": "options"
-              },
-              "name": "options"
-            }
-          ],
-          "body": {
-            "type": "BlockStatement",
-            "start": 86,
-            "end": 183,
-            "loc": {
-              "start": {
-                "line": 5,
-                "column": 29
-              },
-              "end": {
-                "line": 11,
-                "column": 1
-              }
-            },
-            "body": [
-              {
-                "type": "ExpressionStatement",
-                "start": 153,
-                "end": 180,
-                "loc": {
-                  "start": {
-                    "line": 10,
-                    "column": 1
-                  },
-                  "end": {
-                    "line": 10,
-                    "column": 28
-                  }
-                },
-                "expression": {
-                  "type": "AssignmentExpression",
-                  "start": 153,
-                  "end": 179,
-                  "loc": {
-                    "start": {
-                      "line": 10,
-                      "column": 1
-                    },
-                    "end": {
-                      "line": 10,
-                      "column": 27
-                    }
-                  },
-                  "operator": "=",
-                  "left": {
-                    "type": "MemberExpression",
-                    "start": 153,
-                    "end": 163,
-                    "loc": {
-                      "start": {
-                        "line": 10,
-                        "column": 1
-                      },
-                      "end": {
-                        "line": 10,
-                        "column": 11
-                      }
-                    },
-                    "object": {
-                      "type": "ThisExpression",
-                      "start": 153,
-                      "end": 157,
-                      "loc": {
-                        "start": {
-                          "line": 10,
-                          "column": 1
-                        },
-                        "end": {
-                          "line": 10,
-                          "column": 5
-                        }
-                      },
-                      "leadingComments": null
-                    },
-                    "property": {
-                      "type": "Identifier",
-                      "start": 158,
-                      "end": 163,
-                      "loc": {
-                        "start": {
-                          "line": 10,
-                          "column": 6
-                        },
-                        "end": {
-                          "line": 10,
-                          "column": 11
-                        },
-                        "identifierName": "entry"
-                      },
-                      "name": "entry"
-                    },
-                    "computed": false,
-                    "leadingComments": null
-                  },
-                  "right": {
-                    "type": "MemberExpression",
-                    "start": 166,
-                    "end": 179,
-                    "loc": {
-                      "start": {
-                        "line": 10,
-                        "column": 14
-                      },
-                      "end": {
-                        "line": 10,
-                        "column": 27
-                      }
-                    },
-                    "object": {
-                      "type": "Identifier",
-                      "start": 166,
-                      "end": 173,
-                      "loc": {
-                        "start": {
-                          "line": 10,
-                          "column": 14
-                        },
-                        "end": {
-                          "line": 10,
-                          "column": 21
-                        },
-                        "identifierName": "options"
-                      },
-                      "name": "options"
-                    },
-                    "property": {
-                      "type": "Identifier",
-                      "start": 174,
-                      "end": 179,
-                      "loc": {
-                        "start": {
-                          "line": 10,
-                          "column": 22
-                        },
-                        "end": {
-                          "line": 10,
-                          "column": 27
-                        },
-                        "identifierName": "entry"
-                      },
-                      "name": "entry"
-                    },
-                    "computed": false
-                  },
-                  "leadingComments": null
-                },
-                "leadingComments": [
-                  {
-                    "type": "CommentBlock",
-                    "value": "*\r\n\t* @type {string} this.entry path of node script\r\n\t",
-                    "start": 90,
-                    "end": 148,
-                    "loc": {
-                      "start": {
-                        "line": 6,
-                        "column": 1
-                      },
-                      "end": {
-                        "line": 8,
-                        "column": 3
-                      }
-                    }
-                  }
-                ]
-              }
-            ],
-            "directives": []
-          },
-          "leadingComments": [
-            {
-              "type": "CommentBlock",
-              "value": "*\r\n * Add a new task\r\n * @param {Object} options\r\n ",
-              "start": 0,
-              "end": 55,
-              "loc": {
-                "start": {
-                  "line": 1,
-                  "column": 0
-                },
-                "end": {
-                  "line": 4,
-                  "column": 3
-                }
-              }
-            }
-          ],
-          "trailingComments": []
-        },
-        "leadingComments": [
+        "specifiers": [
           {
-            "type": "CommentBlock",
-            "value": "*\r\n * Add a new task\r\n * @param {Object} options\r\n ",
-            "start": 0,
-            "end": 55,
+            "type": "ImportSpecifier",
+            "start": 9,
+            "end": 14,
             "loc": {
               "start": {
                 "line": 1,
+                "column": 9
+              },
+              "end": {
+                "line": 1,
+                "column": 14
+              }
+            },
+            "imported": {
+              "type": "Identifier",
+              "start": 9,
+              "end": 14,
+              "loc": {
+                "start": {
+                  "line": 1,
+                  "column": 9
+                },
+                "end": {
+                  "line": 1,
+                  "column": 14
+                },
+                "identifierName": "Komet"
+              },
+              "name": "Komet"
+            },
+            "local": {
+              "type": "Identifier",
+              "start": 9,
+              "end": 14,
+              "loc": {
+                "start": {
+                  "line": 1,
+                  "column": 9
+                },
+                "end": {
+                  "line": 1,
+                  "column": 14
+                },
+                "identifierName": "Komet"
+              },
+              "name": "Komet"
+            }
+          }
+        ],
+        "source": {
+          "type": "StringLiteral",
+          "start": 22,
+          "end": 34,
+          "loc": {
+            "start": {
+              "line": 1,
+              "column": 22
+            },
+            "end": {
+              "line": 1,
+              "column": 34
+            }
+          },
+          "extra": {
+            "rawValue": "./komet.js",
+            "raw": "'./komet.js'"
+          },
+          "value": "./komet.js"
+        }
+      },
+      {
+        "type": "VariableDeclaration",
+        "start": 39,
+        "end": 62,
+        "loc": {
+          "start": {
+            "line": 3,
+            "column": 0
+          },
+          "end": {
+            "line": 3,
+            "column": 23
+          }
+        },
+        "declarations": [
+          {
+            "type": "VariableDeclarator",
+            "start": 43,
+            "end": 61,
+            "loc": {
+              "start": {
+                "line": 3,
+                "column": 4
+              },
+              "end": {
+                "line": 3,
+                "column": 22
+              }
+            },
+            "id": {
+              "type": "Identifier",
+              "start": 43,
+              "end": 47,
+              "loc": {
+                "start": {
+                  "line": 3,
+                  "column": 4
+                },
+                "end": {
+                  "line": 3,
+                  "column": 8
+                },
+                "identifierName": "inst"
+              },
+              "name": "inst"
+            },
+            "init": {
+              "type": "NewExpression",
+              "start": 50,
+              "end": 61,
+              "loc": {
+                "start": {
+                  "line": 3,
+                  "column": 11
+                },
+                "end": {
+                  "line": 3,
+                  "column": 22
+                }
+              },
+              "callee": {
+                "type": "Identifier",
+                "start": 54,
+                "end": 59,
+                "loc": {
+                  "start": {
+                    "line": 3,
+                    "column": 15
+                  },
+                  "end": {
+                    "line": 3,
+                    "column": 20
+                  },
+                  "identifierName": "Komet"
+                },
+                "name": "Komet"
+              },
+              "arguments": []
+            }
+          }
+        ],
+        "kind": "let"
+      },
+      {
+        "type": "ExpressionStatement",
+        "start": 64,
+        "end": 86,
+        "loc": {
+          "start": {
+            "line": 4,
+            "column": 0
+          },
+          "end": {
+            "line": 4,
+            "column": 22
+          }
+        },
+        "expression": {
+          "type": "AssignmentExpression",
+          "start": 64,
+          "end": 85,
+          "loc": {
+            "start": {
+              "line": 4,
+              "column": 0
+            },
+            "end": {
+              "line": 4,
+              "column": 21
+            }
+          },
+          "operator": "=",
+          "left": {
+            "type": "MemberExpression",
+            "start": 64,
+            "end": 78,
+            "loc": {
+              "start": {
+                "line": 4,
                 "column": 0
               },
               "end": {
                 "line": 4,
-                "column": 3
+                "column": 14
               }
-            }
+            },
+            "object": {
+              "type": "Identifier",
+              "start": 64,
+              "end": 70,
+              "loc": {
+                "start": {
+                  "line": 4,
+                  "column": 0
+                },
+                "end": {
+                  "line": 4,
+                  "column": 6
+                },
+                "identifierName": "module"
+              },
+              "name": "module"
+            },
+            "property": {
+              "type": "Identifier",
+              "start": 71,
+              "end": 78,
+              "loc": {
+                "start": {
+                  "line": 4,
+                  "column": 7
+                },
+                "end": {
+                  "line": 4,
+                  "column": 14
+                },
+                "identifierName": "exports"
+              },
+              "name": "exports"
+            },
+            "computed": false
+          },
+          "right": {
+            "type": "Identifier",
+            "start": 81,
+            "end": 85,
+            "loc": {
+              "start": {
+                "line": 4,
+                "column": 17
+              },
+              "end": {
+                "line": 4,
+                "column": 21
+              },
+              "identifierName": "inst"
+            },
+            "name": "inst"
           }
-        ]
+        }
       }
     ],
     "directives": []
   },
-  "comments": [
-    {
-      "type": "CommentBlock",
-      "value": "*\r\n * Add a new task\r\n * @param {Object} options\r\n ",
-      "start": 0,
-      "end": 55,
-      "loc": {
-        "start": {
-          "line": 1,
-          "column": 0
-        },
-        "end": {
-          "line": 4,
-          "column": 3
-        }
-      }
-    },
-    {
-      "type": "CommentBlock",
-      "value": "*\r\n\t* @type {string} this.entry path of node script\r\n\t",
-      "start": 90,
-      "end": 148,
-      "loc": {
-        "start": {
-          "line": 6,
-          "column": 1
-        },
-        "end": {
-          "line": 8,
-          "column": 3
-        }
-      }
-    }
-  ],
+  "comments": [],
   "tokens": [
     {
-      "type": "CommentBlock",
-      "value": "*\r\n * Add a new task\r\n * @param {Object} options\r\n ",
-      "start": 0,
-      "end": 55,
-      "loc": {
-        "start": {
-          "line": 1,
-          "column": 0
-        },
-        "end": {
-          "line": 4,
-          "column": 3
-        }
-      }
-    },
-    {
       "type": {
-        "label": "export",
-        "keyword": "export",
+        "label": "import",
+        "keyword": "import",
         "beforeExpr": false,
         "startsExpr": false,
         "rightAssociative": false,
@@ -373,146 +314,17 @@
         "binop": null,
         "updateContext": null
       },
-      "value": "export",
-      "start": 57,
-      "end": 63,
+      "value": "import",
+      "start": 0,
+      "end": 6,
       "loc": {
         "start": {
-          "line": 5,
+          "line": 1,
           "column": 0
         },
         "end": {
-          "line": 5,
+          "line": 1,
           "column": 6
-        }
-      }
-    },
-    {
-      "type": {
-        "label": "function",
-        "keyword": "function",
-        "beforeExpr": false,
-        "startsExpr": true,
-        "rightAssociative": false,
-        "isLoop": false,
-        "isAssign": false,
-        "prefix": false,
-        "postfix": false,
-        "binop": null
-      },
-      "value": "function",
-      "start": 64,
-      "end": 72,
-      "loc": {
-        "start": {
-          "line": 5,
-          "column": 7
-        },
-        "end": {
-          "line": 5,
-          "column": 15
-        }
-      }
-    },
-    {
-      "type": {
-        "label": "name",
-        "beforeExpr": false,
-        "startsExpr": true,
-        "rightAssociative": false,
-        "isLoop": false,
-        "isAssign": false,
-        "prefix": false,
-        "postfix": false,
-        "binop": null
-      },
-      "value": "task",
-      "start": 73,
-      "end": 77,
-      "loc": {
-        "start": {
-          "line": 5,
-          "column": 16
-        },
-        "end": {
-          "line": 5,
-          "column": 20
-        }
-      }
-    },
-    {
-      "type": {
-        "label": "(",
-        "beforeExpr": true,
-        "startsExpr": true,
-        "rightAssociative": false,
-        "isLoop": false,
-        "isAssign": false,
-        "prefix": false,
-        "postfix": false,
-        "binop": null
-      },
-      "start": 77,
-      "end": 78,
-      "loc": {
-        "start": {
-          "line": 5,
-          "column": 20
-        },
-        "end": {
-          "line": 5,
-          "column": 21
-        }
-      }
-    },
-    {
-      "type": {
-        "label": "name",
-        "beforeExpr": false,
-        "startsExpr": true,
-        "rightAssociative": false,
-        "isLoop": false,
-        "isAssign": false,
-        "prefix": false,
-        "postfix": false,
-        "binop": null
-      },
-      "value": "options",
-      "start": 78,
-      "end": 85,
-      "loc": {
-        "start": {
-          "line": 5,
-          "column": 21
-        },
-        "end": {
-          "line": 5,
-          "column": 28
-        }
-      }
-    },
-    {
-      "type": {
-        "label": ")",
-        "beforeExpr": false,
-        "startsExpr": false,
-        "rightAssociative": false,
-        "isLoop": false,
-        "isAssign": false,
-        "prefix": false,
-        "postfix": false,
-        "binop": null
-      },
-      "start": 85,
-      "end": 86,
-      "loc": {
-        "start": {
-          "line": 5,
-          "column": 28
-        },
-        "end": {
-          "line": 5,
-          "column": 29
         }
       }
     },
@@ -528,86 +340,16 @@
         "postfix": false,
         "binop": null
       },
-      "start": 86,
-      "end": 87,
+      "start": 7,
+      "end": 8,
       "loc": {
         "start": {
-          "line": 5,
-          "column": 29
+          "line": 1,
+          "column": 7
         },
         "end": {
-          "line": 5,
-          "column": 30
-        }
-      }
-    },
-    {
-      "type": "CommentBlock",
-      "value": "*\r\n\t* @type {string} this.entry path of node script\r\n\t",
-      "start": 90,
-      "end": 148,
-      "loc": {
-        "start": {
-          "line": 6,
-          "column": 1
-        },
-        "end": {
-          "line": 8,
-          "column": 3
-        }
-      }
-    },
-    {
-      "type": {
-        "label": "this",
-        "keyword": "this",
-        "beforeExpr": false,
-        "startsExpr": true,
-        "rightAssociative": false,
-        "isLoop": false,
-        "isAssign": false,
-        "prefix": false,
-        "postfix": false,
-        "binop": null,
-        "updateContext": null
-      },
-      "value": "this",
-      "start": 153,
-      "end": 157,
-      "loc": {
-        "start": {
-          "line": 10,
-          "column": 1
-        },
-        "end": {
-          "line": 10,
-          "column": 5
-        }
-      }
-    },
-    {
-      "type": {
-        "label": ".",
-        "beforeExpr": false,
-        "startsExpr": false,
-        "rightAssociative": false,
-        "isLoop": false,
-        "isAssign": false,
-        "prefix": false,
-        "postfix": false,
-        "binop": null,
-        "updateContext": null
-      },
-      "start": 157,
-      "end": 158,
-      "loc": {
-        "start": {
-          "line": 10,
-          "column": 5
-        },
-        "end": {
-          "line": 10,
-          "column": 6
+          "line": 1,
+          "column": 8
         }
       }
     },
@@ -623,17 +365,175 @@
         "postfix": false,
         "binop": null
       },
-      "value": "entry",
-      "start": 158,
-      "end": 163,
+      "value": "Komet",
+      "start": 9,
+      "end": 14,
       "loc": {
         "start": {
-          "line": 10,
-          "column": 6
+          "line": 1,
+          "column": 9
         },
         "end": {
-          "line": 10,
-          "column": 11
+          "line": 1,
+          "column": 14
+        }
+      }
+    },
+    {
+      "type": {
+        "label": "}",
+        "beforeExpr": false,
+        "startsExpr": false,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null
+      },
+      "start": 15,
+      "end": 16,
+      "loc": {
+        "start": {
+          "line": 1,
+          "column": 15
+        },
+        "end": {
+          "line": 1,
+          "column": 16
+        }
+      }
+    },
+    {
+      "type": {
+        "label": "name",
+        "beforeExpr": false,
+        "startsExpr": true,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null
+      },
+      "value": "from",
+      "start": 17,
+      "end": 21,
+      "loc": {
+        "start": {
+          "line": 1,
+          "column": 17
+        },
+        "end": {
+          "line": 1,
+          "column": 21
+        }
+      }
+    },
+    {
+      "type": {
+        "label": "string",
+        "beforeExpr": false,
+        "startsExpr": true,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null,
+        "updateContext": null
+      },
+      "value": "./komet.js",
+      "start": 22,
+      "end": 34,
+      "loc": {
+        "start": {
+          "line": 1,
+          "column": 22
+        },
+        "end": {
+          "line": 1,
+          "column": 34
+        }
+      }
+    },
+    {
+      "type": {
+        "label": ";",
+        "beforeExpr": true,
+        "startsExpr": false,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null,
+        "updateContext": null
+      },
+      "start": 34,
+      "end": 35,
+      "loc": {
+        "start": {
+          "line": 1,
+          "column": 34
+        },
+        "end": {
+          "line": 1,
+          "column": 35
+        }
+      }
+    },
+    {
+      "type": {
+        "label": "let",
+        "keyword": "let",
+        "beforeExpr": false,
+        "startsExpr": false,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null,
+        "updateContext": null
+      },
+      "value": "let",
+      "start": 39,
+      "end": 42,
+      "loc": {
+        "start": {
+          "line": 3,
+          "column": 0
+        },
+        "end": {
+          "line": 3,
+          "column": 3
+        }
+      }
+    },
+    {
+      "type": {
+        "label": "name",
+        "beforeExpr": false,
+        "startsExpr": true,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null
+      },
+      "value": "inst",
+      "start": 43,
+      "end": 47,
+      "loc": {
+        "start": {
+          "line": 3,
+          "column": 4
+        },
+        "end": {
+          "line": 3,
+          "column": 8
         }
       }
     },
@@ -651,50 +551,25 @@
         "updateContext": null
       },
       "value": "=",
-      "start": 164,
-      "end": 165,
+      "start": 48,
+      "end": 49,
       "loc": {
         "start": {
-          "line": 10,
-          "column": 12
+          "line": 3,
+          "column": 9
         },
         "end": {
-          "line": 10,
-          "column": 13
+          "line": 3,
+          "column": 10
         }
       }
     },
     {
       "type": {
-        "label": "name",
-        "beforeExpr": false,
+        "label": "new",
+        "keyword": "new",
+        "beforeExpr": true,
         "startsExpr": true,
-        "rightAssociative": false,
-        "isLoop": false,
-        "isAssign": false,
-        "prefix": false,
-        "postfix": false,
-        "binop": null
-      },
-      "value": "options",
-      "start": 166,
-      "end": 173,
-      "loc": {
-        "start": {
-          "line": 10,
-          "column": 14
-        },
-        "end": {
-          "line": 10,
-          "column": 21
-        }
-      }
-    },
-    {
-      "type": {
-        "label": ".",
-        "beforeExpr": false,
-        "startsExpr": false,
         "rightAssociative": false,
         "isLoop": false,
         "isAssign": false,
@@ -703,16 +578,17 @@
         "binop": null,
         "updateContext": null
       },
-      "start": 173,
-      "end": 174,
+      "value": "new",
+      "start": 50,
+      "end": 53,
       "loc": {
         "start": {
-          "line": 10,
-          "column": 21
+          "line": 3,
+          "column": 11
         },
         "end": {
-          "line": 10,
-          "column": 22
+          "line": 3,
+          "column": 14
         }
       }
     },
@@ -728,17 +604,67 @@
         "postfix": false,
         "binop": null
       },
-      "value": "entry",
-      "start": 174,
-      "end": 179,
+      "value": "Komet",
+      "start": 54,
+      "end": 59,
       "loc": {
         "start": {
-          "line": 10,
-          "column": 22
+          "line": 3,
+          "column": 15
         },
         "end": {
-          "line": 10,
-          "column": 27
+          "line": 3,
+          "column": 20
+        }
+      }
+    },
+    {
+      "type": {
+        "label": "(",
+        "beforeExpr": true,
+        "startsExpr": true,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null
+      },
+      "start": 59,
+      "end": 60,
+      "loc": {
+        "start": {
+          "line": 3,
+          "column": 20
+        },
+        "end": {
+          "line": 3,
+          "column": 21
+        }
+      }
+    },
+    {
+      "type": {
+        "label": ")",
+        "beforeExpr": false,
+        "startsExpr": false,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null
+      },
+      "start": 60,
+      "end": 61,
+      "loc": {
+        "start": {
+          "line": 3,
+          "column": 21
+        },
+        "end": {
+          "line": 3,
+          "column": 22
         }
       }
     },
@@ -755,24 +681,24 @@
         "binop": null,
         "updateContext": null
       },
-      "start": 179,
-      "end": 180,
+      "start": 61,
+      "end": 62,
       "loc": {
         "start": {
-          "line": 10,
-          "column": 27
+          "line": 3,
+          "column": 22
         },
         "end": {
-          "line": 10,
-          "column": 28
+          "line": 3,
+          "column": 23
         }
       }
     },
     {
       "type": {
-        "label": "}",
+        "label": "name",
         "beforeExpr": false,
-        "startsExpr": false,
+        "startsExpr": true,
         "rightAssociative": false,
         "isLoop": false,
         "isAssign": false,
@@ -780,16 +706,148 @@
         "postfix": false,
         "binop": null
       },
-      "start": 182,
-      "end": 183,
+      "value": "module",
+      "start": 64,
+      "end": 70,
       "loc": {
         "start": {
-          "line": 11,
+          "line": 4,
           "column": 0
         },
         "end": {
-          "line": 11,
-          "column": 1
+          "line": 4,
+          "column": 6
+        }
+      }
+    },
+    {
+      "type": {
+        "label": ".",
+        "beforeExpr": false,
+        "startsExpr": false,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null,
+        "updateContext": null
+      },
+      "start": 70,
+      "end": 71,
+      "loc": {
+        "start": {
+          "line": 4,
+          "column": 6
+        },
+        "end": {
+          "line": 4,
+          "column": 7
+        }
+      }
+    },
+    {
+      "type": {
+        "label": "name",
+        "beforeExpr": false,
+        "startsExpr": true,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null
+      },
+      "value": "exports",
+      "start": 71,
+      "end": 78,
+      "loc": {
+        "start": {
+          "line": 4,
+          "column": 7
+        },
+        "end": {
+          "line": 4,
+          "column": 14
+        }
+      }
+    },
+    {
+      "type": {
+        "label": "=",
+        "beforeExpr": true,
+        "startsExpr": false,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": true,
+        "prefix": false,
+        "postfix": false,
+        "binop": null,
+        "updateContext": null
+      },
+      "value": "=",
+      "start": 79,
+      "end": 80,
+      "loc": {
+        "start": {
+          "line": 4,
+          "column": 15
+        },
+        "end": {
+          "line": 4,
+          "column": 16
+        }
+      }
+    },
+    {
+      "type": {
+        "label": "name",
+        "beforeExpr": false,
+        "startsExpr": true,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null
+      },
+      "value": "inst",
+      "start": 81,
+      "end": 85,
+      "loc": {
+        "start": {
+          "line": 4,
+          "column": 17
+        },
+        "end": {
+          "line": 4,
+          "column": 21
+        }
+      }
+    },
+    {
+      "type": {
+        "label": ";",
+        "beforeExpr": true,
+        "startsExpr": false,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null,
+        "updateContext": null
+      },
+      "start": 85,
+      "end": 86,
+      "loc": {
+        "start": {
+          "line": 4,
+          "column": 21
+        },
+        "end": {
+          "line": 4,
+          "column": 22
         }
       }
     },
@@ -806,16 +864,16 @@
         "binop": null,
         "updateContext": null
       },
-      "start": 183,
-      "end": 183,
+      "start": 88,
+      "end": 88,
       "loc": {
         "start": {
-          "line": 11,
-          "column": 1
+          "line": 5,
+          "column": 0
         },
         "end": {
-          "line": 11,
-          "column": 1
+          "line": 5,
+          "column": 0
         }
       }
     }

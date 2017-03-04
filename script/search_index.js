@@ -1,9 +1,9 @@
 window.esdocSearchIndex = [
   [
-    "komet/source/index.js~task",
-    "function/index.html#static-function-task",
-    "<span>task</span> <span class=\"search-result-import-path\">komet/source/index.js</span>",
-    "function"
+    "komet/source/komet.js~komet",
+    "class/source/komet.js~Komet.html",
+    "<span>Komet</span> <span class=\"search-result-import-path\">komet/source/komet.js</span>",
+    "class"
   ],
   [
     "builtinexternal/ecmascriptexternal.js~array",
@@ -340,5 +340,23 @@ window.esdocSearchIndex = [
     "file/source/index.js.html",
     "source/index.js",
     "file"
+  ],
+  [
+    "source/komet-util.js",
+    "file/source/komet-util.js.html",
+    "source/komet-util.js",
+    "file"
+  ],
+  [
+    "source/komet.js",
+    "file/source/komet.js.html",
+    "source/komet.js",
+    "file"
+  ],
+  [
+    "source/komet.js~komet#task",
+    "class/source/komet.js~Komet.html#instance-method-task",
+    "source/komet.js~Komet#task",
+    "method"
   ]
 ]

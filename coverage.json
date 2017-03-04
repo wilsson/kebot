@@ -1,11 +1,11 @@
 {
   "coverage": "100%",
-  "expectCount": 1,
-  "actualCount": 1,
+  "expectCount": 2,
+  "actualCount": 2,
   "files": {
-    "source/index.js": {
-      "expectCount": 1,
-      "actualCount": 1,
+    "source/komet.js": {
+      "expectCount": 2,
+      "actualCount": 2,
       "undocumentLines": []
     }
   }
