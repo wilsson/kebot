@@ -1,16 +1,38 @@
 import EventEmitter from 'events';
 import * as _ from './komet-util.js';
 
+/**
+ * @since 0.0.1
+ * @example
+ * var komet = require("komet");
+ *
+ * komet.task({
+ *  alias:'task-one',
+ *  entry:'task-one.js'
+ * });
+ */
 export class Komet extends EventEmitter{
+
+	/**
+	 * @private
+	 */
 	constructor(){
 		super();
+		/**
+		 * @private
+		 */
 		this.tasks = {};
 	}
+
 	/**
-	 * @param {object} config - Whether it is dependent or not.
+	 * @desc Method for creating a task.
+	 * @param {Object} config - Task configuration object.
+	 * @param {string} config.alias - The alias of your task.
+	 * @param {string} config.entry - The path of your node script.
+	 * @param {Array} config.dependsof - Task dependencies.
 	 */
 	task(config){
-        this.orchestratorValidateString(config);
+		this.orchestratorValidateString(config);
 		if(config.dependencies){
 			if(!Array.isArray(config.dependencies)){
 				throw new Error('Dependencies require a array');
@@ -23,16 +45,27 @@ export class Komet extends EventEmitter{
 		}
 		this.tasks[config.alias] = config;
 	}
-    orchestratorValidateString(config){
-        this.validateString(config.alias);
-        this.validateString(config.entry);
-    }
-    validateString(entity){
-        if(entity && typeof entity !== 'string'){
-            throw new Error(`${entity} needs to be a string`);
-        }
-    }
+
 	/**
+	 * @private
+	 */
+	orchestratorValidateString(config){
+		this.validateString(config.alias);
+		this.validateString(config.entry);
+	}
+
+	/**
+	 * @private
+	 */
+	validateString(entity){
+		if(entity && typeof entity !== 'string'){
+			throw new Error(`${entity} needs to be a string`);
+		}
+	}
+
+
+	/**
+	 * @private
 	 * @param {array} tastas - kask from cli.
 	 * @param {boolean} option - Whether it is dependent or not.
 	 */
@@ -50,10 +83,12 @@ export class Komet extends EventEmitter{
 		if(foundTask){
 			that.armedTasks(foundTask, option);
 		}else{
-            this.emit('task_not_found', task);
-        }
+			this.emit('task_not_found', task);
+		}
 	}
+
 	/**
+	 * @private
 	 * @param {array} tastas - kask from cli.
 	 * @param {boolean} option -Whether it is dependent or not.
 	 */
@@ -67,12 +102,14 @@ export class Komet extends EventEmitter{
 			that.dependencies(task);
 		}else{
 			_.execute(param);
-        }
-        if(!task.entry && !option && task.dependsof){
-            that.emit("task_not_entry", task);
-        }
+		}
+		if(!task.entry && !option && task.dependsof){
+			that.emit("task_not_entry", task);
+		}
 	}
+
 	/**
+	 * @private
 	 * @param {object} task - Configuration to run the script with dependencies.
 	 */
 	dependencies(task){
@@ -89,7 +126,9 @@ export class Komet extends EventEmitter{
 		tasksRun[task.alias] = task;
 		this.dependenciesRun(tasksRun);
 	}
+
 	/**
+	 * @private
 	 * @param {object} tasksRun - All configurations to run.
 	 */
 	dependenciesRun(tasksRun){

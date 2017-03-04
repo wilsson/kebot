@@ -3,6 +3,7 @@ import fs from 'fs';
 import prettyHrtime from 'pretty-hrtime';
 
 /**
+ * @private
  * @param {object} object - Object to treat.
  */
 export function shiftObject(object){
@@ -14,6 +15,7 @@ export function shiftObject(object){
 
 
 /**
+ * @private
  * @param {object} param
  */
 export function execute(param){
