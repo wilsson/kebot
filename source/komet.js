@@ -1,4 +1,5 @@
 import EventEmitter from 'events';
+import validate from './validate-case.js';
 import * as _ from './komet-util.js';
 
 /**
@@ -32,37 +33,16 @@ export class Komet extends EventEmitter{
 	 * @param {Array} config.dependsof - Task dependencies.
 	 */
 	task(config){
-		this.orchestratorValidateString(config);
+		validate.execute('string', config.alias);
+		validate.execute('string', config.entry);
 		if(config.dependencies){
-			if(!Array.isArray(config.dependencies)){
-				throw new Error('Dependencies require a array');
-			}
+			validate.execute('array', config.dependencies);
 			config.dependencies.forEach(function(dep){
-				if(typeof dep !== 'string'){
-					throw new Error(`Dependency name ${dep} needs to be a string`);
-				}
+				validate.execute('string', dep);
 			});
 		}
 		this.tasks[config.alias] = config;
 	}
-
-	/**
-	 * @private
-	 */
-	orchestratorValidateString(config){
-		this.validateString(config.alias);
-		this.validateString(config.entry);
-	}
-
-	/**
-	 * @private
-	 */
-	validateString(entity){
-		if(entity && typeof entity !== 'string'){
-			throw new Error(`${entity} needs to be a string`);
-		}
-	}
-
 
 	/**
 	 * @private
