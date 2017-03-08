@@ -1,6 +1,6 @@
 import EventEmitter from 'events';
-import validate from './validate-case.js';
-import * as _ from './komet-util.js';
+import validate from './validate';
+import * as _ from './util';
 
 /**
  * @since 0.0.1

@@ -1,4 +1,7 @@
-class Validate{
+/**
+ * @private
+ */
+export class Validate{
 	string(entity){
 		if(entity && typeof entity !== 'string'){
 			throw new Error(`${entity} needs to be a string`);
@@ -14,6 +17,3 @@ class Validate{
 		that[type].apply(that, [].slice.call(arguments, 1));
 	}
 }
-
-let inst = new Validate();
-module.exports = inst;
