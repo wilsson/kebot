@@ -33,15 +33,16 @@ export class Komet extends EventEmitter{
 	 * @param {Array} config.dependsof - Task dependencies.
 	 */
 	task(config){
-		validate.execute('string', config.alias);
-		validate.execute('string', config.entry);
+		let {alias, entry, dependencies} = config;
+		validate.execute('string', alias);
+		validate.execute('string', entry);
 		if(config.dependencies){
-			validate.execute('array', config.dependencies);
-			config.dependencies.forEach(function(dep){
+			validate.execute('array', dependencies);
+			for(const dependence of dependencies){
 				validate.execute('string', dep);
-			});
+			}
 		}
-		this.tasks[config.alias] = config;
+		this.tasks[alias] = config;
 	}
 
 	/**
@@ -50,18 +51,17 @@ export class Komet extends EventEmitter{
 	 * @param {boolean} option - Whether it is dependent or not.
 	 */
 	start(task, option){
-		let that = this;
 		let foundTask;
 		if(!task){
 			throw new Error('Not alias task for argument');
 		}
-		for(let alias in that.tasks){
+		for(let alias in this.tasks){
 			if(alias === task){
-				foundTask = that.tasks[alias];
+				foundTask = this.tasks[alias];
 			}
 		}
 		if(foundTask){
-			that.armedTasks(foundTask, option);
+			this.armedTasks(foundTask, option);
 		}else{
 			this.emit('task_not_found', task);
 		}
@@ -73,18 +73,17 @@ export class Komet extends EventEmitter{
 	 * @param {boolean} option -Whether it is dependent or not.
 	 */
 	armedTasks(task, option){
-		let that = this;
 		let param = {
-			that:that,
+			that:this,
 			task:task
 		};
 		if(task.dependsof && option){
-			that.dependencies(task);
+			this.dependencies(task);
 		}else{
 			_.execute(param);
 		}
 		if(!task.entry && !option && task.dependsof){
-			that.emit("task_not_entry", task);
+			this.emit("task_not_entry", task);
 		}
 	}
 
@@ -93,13 +92,12 @@ export class Komet extends EventEmitter{
 	 * @param {object} task - Configuration to run the script with dependencies.
 	 */
 	dependencies(task){
-		let that = this;
 		let tasksRun = {};
 		let lengthTask = task.dependsof.length;
-		for(let alias in that.tasks){
+		for(let alias in this.tasks){
 			for(let i = 0; i < lengthTask; i++){
 				if(alias === task.dependsof[i]){
-					tasksRun[alias] = that.tasks[alias];
+					tasksRun[alias] = this.tasks[alias];
 				}
 			}
 		}
@@ -112,14 +110,13 @@ export class Komet extends EventEmitter{
 	 * @param {object} tasksRun - All configurations to run.
 	 */
 	dependenciesRun(tasksRun){
-		let that = this;
 		let task;
 		let params;
 		let runRecursive = (tasksRun)=>{
 			if(Object.keys(tasksRun).length){
 				task = _.shiftObject(tasksRun);
 				params = {
-					that:that,
+					that:this,
 					task:task,
 					tasksRun:tasksRun,
 					callback:runRecursive

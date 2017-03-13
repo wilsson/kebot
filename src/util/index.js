@@ -19,10 +19,7 @@ export function shiftObject(object){
  * @param {object} param
  */
 export function execute(param){
-	let that = param.that;
-	let task = param.task;
-	let tasksRun = param.tasksRun;
-	let callback = param.callback;
+	let {that, task, tasksRun, callback} = param;
     if(task.entry){
     	let start = process.hrtime();
     	exec(`node ${task.entry}`, (error, stout, stderr)=>{
