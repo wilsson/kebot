@@ -8,9 +8,8 @@ var komet = require('../../lib');
 
 komet.task({
 	alias:"css",
-	//entry:'./tasks/css.js',
-	entry:"32343" ,
-	dependsof:['sprite', 'fonts', 'otro']
+	entry:'./tasks/css.js',
+	dependsof:['sprite', 'fonts', 'other']
 });
 
 komet.task({

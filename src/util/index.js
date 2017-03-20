@@ -1,6 +1,29 @@
+import prettyHrtime from 'pretty-hrtime';
+import chalk from 'chalk';
+import timestamp from 'time-stamp';
 import { exec } from 'child_process';
 import fs from 'fs';
-import prettyHrtime from 'pretty-hrtime';
+
+/**
+ * @private
+ * @param {string} param - String for simple log.
+ */
+function log(param){
+	console.log("("+chalk.cyan(timestamp("HH:mm:ss"))+")", param);
+}
+
+/**
+ * @private
+ * @param {string} param - String for log error.
+ */
+log.error = function(param){
+	console.log("("+chalk.red(timestamp("HH:mm:ss"))+")", param);
+};
+
+/**
+ * @private
+ */
+export log;
 
 /**
  * @private
@@ -12,7 +35,6 @@ export function shiftObject(object){
 	delete object[key];
 	return firstObject;
 }
-
 
 /**
  * @private

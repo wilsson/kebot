@@ -26,14 +26,13 @@ export class Komet extends EventEmitter{
 	}
 
 	/**
-	 * @desc Method for creating a task.
+	 * @private
+	 * @desc Method for validate task.
 	 * @param {Object} config - Task configuration object.
-	 * @param {string} config.alias - The alias of your task.
-	 * @param {string} config.entry - The path of your node script.
-	 * @param {Array} config.dependsof - Task dependencies.
 	 */
-	task(config){
+	validateTask(config){
 		let {alias, entry, dependencies} = config;
+		let task = {};
 		validate.execute('string', alias);
 		validate.execute('string', entry);
 		if(config.dependencies){
@@ -42,9 +41,21 @@ export class Komet extends EventEmitter{
 				validate.execute('string', dep);
 			}
 		}
-		this.tasks[alias] = config;
+		task[alias] = config;
+		return task;
 	}
 
+	/**
+	 * @desc Method for creating a task.
+	 * @param {Object} config - Task configuration object.
+	 * @param {string} config.alias - The alias of your task.
+	 * @param {string} config.entry - The path of your node script.
+	 * @param {Array} config.dependsof - Task dependencies.
+	 */
+	task(config){
+		let task = this.validateTask(config);
+		Object.assign(this.tasks, task);
+	}
 	/**
 	 * @private
 	 * @param {array} tastas - kask from cli.
