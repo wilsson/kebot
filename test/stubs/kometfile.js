@@ -36,3 +36,8 @@ komet.task({
 	alias:'static',
 	dependsof:['css', 'pug', 'babel']
 });
+
+komet.task({
+	alias:'babel',
+	command:"babel -w ./src -d ./lib"
+});

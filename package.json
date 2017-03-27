@@ -8,7 +8,7 @@
   },
   "scripts": {
     "test": "jest ./test/index.test.js",
-    "babel": "babel -w ./src -d ./lib",
+    "babel": "babel -w ./src -d ./",
     "esdoc": "esdoc"
   },
   "repository": {

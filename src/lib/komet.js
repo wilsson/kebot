@@ -29,6 +29,7 @@ export class Komet extends EventEmitter{
 	 * @private
 	 * @desc Method for validate task.
 	 * @param {Object} config - Task configuration object.
+	 * @return {Object} task - Subscribed task.
 	 */
 	validateTask(config){
 		let {alias, entry, dependencies} = config;
@@ -63,6 +64,7 @@ export class Komet extends EventEmitter{
 	 */
 	start(task, option){
 		let foundTask;
+		let type;
 		if(!task){
 			throw new Error('Not alias task for argument');
 		}
@@ -72,18 +74,43 @@ export class Komet extends EventEmitter{
 			}
 		}
 		if(foundTask){
-			this.armedTasks(foundTask, option);
+			type = this.verifyTypeTask(foundTask);
+			switch(type){
+				case "ENTRY":
+					this.initEntry(foundTask, option);
+					break;
+				case "COMMAND":
+					this.initCommand(foundTask);
+					break;
+			}
 		}else{
 			this.emit('task_not_found', task);
 		}
 	}
+	
+	/**
+	 * @private
+	 * @param {Object} foundTask - Task found.
+	 * @return {string} type - Type of task.
+	 */
+	verifyTypeTask(foundTask){
+		let { entry, command } = foundTask;
+		let type;
+		if(entry){
+			type = "ENTRY";
+		}
+		if(command){
+			type = "COMMAND";
+		}
+		return type;
+	}
 
 	/**
 	 * @private
-	 * @param {array} tastas - kask from cli.
+	 * @param {Object} task - Task found.
 	 * @param {boolean} option -Whether it is dependent or not.
 	 */
-	armedTasks(task, option){
+	initEntry(task, option){
 		let param = {
 			that:this,
 			task:task
@@ -96,6 +123,19 @@ export class Komet extends EventEmitter{
 		if(!task.entry && !option && task.dependsof){
 			this.emit("task_not_entry", task);
 		}
+	}
+
+	/**
+	 * @private
+	 * @param {Object} task - Task found.
+	 */
+	initCommand(task){
+		let param = {
+			that:this,
+			task:task
+		};
+		_.executeCommand(param);
+		
 	}
 
 	/**

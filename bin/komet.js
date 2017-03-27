@@ -1,56 +1,97 @@
 #!/usr/bin/env node
-var timestamp = require('time-stamp');
-var exec = require('child_process').exec;
+"use strict";
+
+var _interpret = require("interpret");
+
+var _interpret2 = _interopRequireDefault(_interpret);
+
+var _liftoff = require("liftoff");
+
+var _liftoff2 = _interopRequireDefault(_liftoff);
+
+var _util = require("../lib/util");
+
+var util = _interopRequireWildcard(_util);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 var argv = require('minimist')(process.argv.slice(2));
-var interpret = require('interpret');
-var Liftoff = require('liftoff');
-var chalk = require('chalk');
 var task = String(argv._[0]);
-var util = require('../lib/util');
-var cli = new Liftoff({
+
+/**
+ * @private
+ * @desc Instance of Liftoff.
+ */
+var cli = new _liftoff2.default({
 	name: 'komet',
-	extensions: interpret.jsVariants
+	extensions: _interpret2.default.jsVariants
 });
 
 var version = argv.v || argv.version;
-var versionCli = require('../package.json');
+var versionCli = require("../package.json");
 
-var callback = function(env){
-    if(version && argv._.length === 0){
-        util.log("CLI version" + versionCli.version);
-        if(env.modulePackage && typeof env.modulePackage.version !== "undefined"){
-        	util.log("Local version" + env.modulePackage.version);
-        }
-        process.exit(0);
-    }
+/**
+ * @private
+ * @desc Callback for initialize aplication.
+ * @param {Object} env - Instance of Liftoff.
+ */
+var callback = function callback(env) {
+	var modulePackage = env.modulePackage,
+	    modulePath = env.modulePath,
+	    configPath = env.configPath;
+
+	if (version && argv._.length === 0) {
+		util.log("CLI version " + versionCli.version);
+		if (modulePackage && typeof modulePackage.version !== "undefined") {
+			util.log("Local version " + modulePackage.version);
+		}
+		process.exit(0);
+	}
+	if (!modulePath) {
+		util.log("Local komet not found in");
+		process.exit(1);
+	}
+	if (!configPath) {
+		util.log("No kometfile found");
+		process.exit(1);
+	}
 	var option = argv.a || false;
-	require(env.configPath);
-	var instKomet = require(env.modulePath);
+	require(configPath);
+	var instKomet = require(modulePath);
 	loadEvents(instKomet);
 	instKomet.start.call(instKomet, task, option);
 };
 
-var loadEvents = function(inst){
-	inst.on('finish_task', function(e){
-		console.log("("+chalk.cyan(timestamp("HH:mm:ss"))+")",'Finish task '+e.task+' in', chalk.magenta(e.time));
+/**
+ * @private
+ * @param {Object} inst - Instance of komet.
+ */
+var loadEvents = function loadEvents(inst) {
+	inst.on("finish_task", function (e) {
+		util.log("Finish task " + e.task + " in", e.time);
 	});
 
-	inst.on('task_not_found', function(e){
-        util.log.error('Task' + e + 'not found');
+	inst.on("task_not_found", function (e) {
+		util.log.error("Task " + e + " not found");
 	});
 
-	inst.on('task_error_entry', function(e){
-        util.log.error('Cannot find module' + e);
+	inst.on("task_error_entry", function (e) {
+		util.log.error("Cannot find module " + e);
 	});
 
-	inst.on('task_not_entry', function(e){
-        util.log.error('Not entry' + e.alias + 'use flag -a');
+	inst.on("task_not_entry", function (e) {
+		util.log.error("Not entry " + e.alias + " use flag -a");
 	});
 };
 
+/**
+ * @private
+ * @desc Start aplication.
+ */
 cli.launch({
 	cwd: argv.cwd,
-	configPath: argv.kometfiles,
+	configPath: argv.kometfile,
 	require: argv.require
 }, callback);
-
