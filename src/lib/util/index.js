@@ -2,7 +2,9 @@ import prettyHrtime from 'pretty-hrtime';
 import chalk from 'chalk';
 import timestamp from 'time-stamp';
 import { exec } from 'child_process';
+import { spawn } from 'child_process';
 import fs from 'fs';
+import npmRun from 'npm-run';
 
 /**
  * @private
@@ -74,14 +76,25 @@ export function execute(param){
 
 /**
  * @private
+ * @param {object} param
  */
 export function executeCommand(param){
 	let { task } = param;
-	exec(`bash ./node_modules/${task.command}`, (error, stout, stderr) => {
-		if(error){
-			console.log(error);
-			return
-		}
-		console.log(stout.trim());
-	})
+    let chunksCommand = task.command.split(/\s/);
+    let [command, ...args] = chunksCommand;
+    let runCommand = spawn(`./node_modules/.bin/${command}`, args);
+
+    let output = "";
+    output+="\n";
+    output+=`> Command - ${command} \n`;
+    output+=`> Args - ${args} \n`;
+    console.log(output);
+
+    runCommand.stdout.on('data', (data) => {
+        console.log(`${data}`.trim());
+    });
+
+    runCommand.stderr.on('data', (data) => {
+        console.log("The command can not be executed");
+    });
 }

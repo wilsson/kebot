@@ -28,16 +28,11 @@ komet.task({
 });
 
 komet.task({
-	alias:'babel',
-	entry:'./tasks/babel.js'
-});
-
-komet.task({
 	alias:'static',
 	dependsof:['css', 'pug', 'babel']
 });
 
 komet.task({
 	alias:'babel',
-	command:"babel -w ./src -d ./lib"
+	command:"babel ./src/index.js"
 });

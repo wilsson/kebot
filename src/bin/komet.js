@@ -5,6 +5,7 @@ import * as util from "../lib/util";
 
 let argv = require('minimist')(process.argv.slice(2));
 let task = String(argv._[0]);
+let envKomet = argv.env;
 
 /**
  * @private
@@ -44,7 +45,7 @@ let callback = (env) => {
 	require(configPath);
 	let instKomet = require(modulePath);
 	loadEvents(instKomet);
-	instKomet.start.call(instKomet, task, option);
+	instKomet.start.call(instKomet, task, option, envKomet);
 };
 
 /**
@@ -61,7 +62,7 @@ let loadEvents = (inst) => {
 	});
 
 	inst.on("task_error_entry", (e) => {
-		util.log.error(`Cannot find module ${e}`);
+		util.log.error(`Error in ${e}`);
 	});
 
 	inst.on("task_not_entry", (e) => {

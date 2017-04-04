@@ -62,7 +62,8 @@ export class Komet extends EventEmitter{
 	 * @param {array} tastas - kask from cli.
 	 * @param {boolean} option - Whether it is dependent or not.
 	 */
-	start(task, option){
+	start(task, option, env){
+        this.createEnv(env);
 		let foundTask;
 		let type;
 		if(!task){
@@ -73,6 +74,7 @@ export class Komet extends EventEmitter{
 				foundTask = this.tasks[alias];
 			}
 		}
+
 		if(foundTask){
 			type = this.verifyTypeTask(foundTask);
 			switch(type){
@@ -87,7 +89,10 @@ export class Komet extends EventEmitter{
 			this.emit('task_not_found', task);
 		}
 	}
-	
+    createEnv(env){
+        process.env[env] = env;
+    }
+
 	/**
 	 * @private
 	 * @param {Object} foundTask - Task found.
@@ -135,7 +140,6 @@ export class Komet extends EventEmitter{
 			task:task
 		};
 		_.executeCommand(param);
-		
 	}
 
 	/**

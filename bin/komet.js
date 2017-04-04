@@ -19,6 +19,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var argv = require('minimist')(process.argv.slice(2));
 var task = String(argv._[0]);
+var envKomet = argv.env;
 
 /**
  * @private
@@ -61,7 +62,7 @@ var callback = function callback(env) {
 	require(configPath);
 	var instKomet = require(modulePath);
 	loadEvents(instKomet);
-	instKomet.start.call(instKomet, task, option);
+	instKomet.start.call(instKomet, task, option, envKomet);
 };
 
 /**
@@ -78,7 +79,7 @@ var loadEvents = function loadEvents(inst) {
 	});
 
 	inst.on("task_error_entry", function (e) {
-		util.log.error("Cannot find module " + e);
+		util.log.error("Error in " + e);
 	});
 
 	inst.on("task_not_entry", function (e) {

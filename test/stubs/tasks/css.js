@@ -1,3 +1,4 @@
-//var foo = require("./css-more.js");
-//foo();
-console.log("My task css");
+console.log("My task css", process.env.production);
+if(process.env.production){
+    log('listo para produccion');
+}
