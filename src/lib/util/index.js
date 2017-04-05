@@ -1,10 +1,10 @@
-import prettyHrtime from 'pretty-hrtime';
-import chalk from 'chalk';
-import timestamp from 'time-stamp';
-import { exec } from 'child_process';
-import { spawn } from 'child_process';
-import fs from 'fs';
-import path from 'path';
+import prettyHrtime from "pretty-hrtime";
+import chalk from "chalk";
+import timestamp from "time-stamp";
+import { exec } from "child_process";
+import { spawn } from "child_process";
+import fs from "fs";
+import path from "path";
 
 /**
  * @private
@@ -65,9 +65,11 @@ export function execute(param){
 			let args = {};
 			args.time = prettyHrtime(end);
 			args.task = task.alias;
-			that.emit('finish_task', args);
-			console.log(stout.trim());
-			if(callback && typeof callback === 'function'){
+			that.emit("finish_task", args);
+            if(stout){
+			    console.log(stout.trim());
+            }
+			if(callback && typeof callback === "function"){
 				callback(tasksRun);
 			}
 		});
@@ -87,8 +89,8 @@ export function executeCommand(param){
 	let runCommand = spawn(pathAbsolute, args);
 	let output = "";
 	output+="\n";
-	output+=`> Command - ${command} \n`;
-	output+=`> Args - ${args} \n`;
+	output+=chalk.bold(`> Command: ${command} \n`);
+	output+=chalk.bold(`> Args: ${args.join(" ")} \n`);
 	console.log(output);
 	runCommand.stdout.on('data', (data) => {
 		console.log(`${data}`.trim());
@@ -99,7 +101,7 @@ export function executeCommand(param){
 }
 
 function getCommandForPlatform(command){
-	if(process.platform === 'win32' )
-		return `${command}.cmd`
+	if(process.platform === "win32" )
+		return `${command}.cmd`;
 	return command;
 }

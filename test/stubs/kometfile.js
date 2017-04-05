@@ -4,7 +4,7 @@
 	* node ../../bin/komet.js komet css -a
 	*/
 
-var komet = require('../../lib');
+var komet = require('komet');
 
 komet.task({
 	alias:"css",
@@ -34,5 +34,5 @@ komet.task({
 
 komet.task({
 	alias:'babel',
-	command:"babel ./src/index.js"
+    command: "babel -w ./src -d ./lib"
 });

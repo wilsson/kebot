@@ -1,5 +1,16 @@
-console.log("My task css", process.env.production);
+var fs = require('fs');
+var postcss = require('postcss');
+var autoprefixer = require('autoprefixer');
 
-if(process.env.production){
-    console.log('listo para produccion');
-}
+fs.readFile('src/index.css', function(err, css){
+    postcss([autoprefixer])
+        .process(css, { from: 'src/index.css', to: 'public/index.css' })
+        .then(function(result){
+            fs.writeFile('public/index.css', result.css);
+            if(result.map){
+                fs.writeFile('public/index.css.map', result.map);
+            };
+        });
+});
+
+console.log(process.env.production);
