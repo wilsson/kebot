@@ -51,7 +51,7 @@ var callback = function callback(env) {
 		process.exit(0);
 	}
 	if (!modulePath) {
-		util.log("Local komet not found in");
+		util.log("Local komet not found");
 		process.exit(1);
 	}
 	if (!configPath) {

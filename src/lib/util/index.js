@@ -4,7 +4,7 @@ import timestamp from 'time-stamp';
 import { exec } from 'child_process';
 import { spawn } from 'child_process';
 import fs from 'fs';
-import npmRun from 'npm-run';
+import path from 'path';
 
 /**
  * @private
@@ -79,22 +79,27 @@ export function execute(param){
  * @param {object} param
  */
 export function executeCommand(param){
-	let { task } = param;
-    let chunksCommand = task.command.split(/\s/);
-    let [command, ...args] = chunksCommand;
-    let runCommand = spawn(`./node_modules/.bin/${command}`, args);
+	let { task : { command: cmd }}  = param;
+	let chunksCommand = cmd.split(/\s/);
+	let [command, ...args] = chunksCommand;
+	command = getCommandForPlatform(command);
+	let pathAbsolute = path.resolve(`./node_modules/.bin/${command}`);
+	let runCommand = spawn(pathAbsolute, args);
+	let output = "";
+	output+="\n";
+	output+=`> Command - ${command} \n`;
+	output+=`> Args - ${args} \n`;
+	console.log(output);
+	runCommand.stdout.on('data', (data) => {
+		console.log(`${data}`.trim());
+	});
+	runCommand.stderr.on('data', (data) => {
+		console.log(`${data}`);
+	});
+}
 
-    let output = "";
-    output+="\n";
-    output+=`> Command - ${command} \n`;
-    output+=`> Args - ${args} \n`;
-    console.log(output);
-
-    runCommand.stdout.on('data', (data) => {
-        console.log(`${data}`.trim());
-    });
-
-    runCommand.stderr.on('data', (data) => {
-        console.log("The command can not be executed");
-    });
+function getCommandForPlatform(command){
+	if(process.platform === 'win32' )
+		return `${command}.cmd`
+	return command;
 }
