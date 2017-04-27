@@ -20,7 +20,7 @@ log.error = function(param){
 	let output = "";
 	output+= `(${chalk.red(timestamp("HH:mm:ss"))})`;
 	output+= param;
-	console.log(output);
+	console.log(output.trim());
 };
 
 /**
@@ -34,7 +34,7 @@ export function log(param, time){
 	output+= `(${chalk.cyan(timestamp("HH:mm:ss"))})`;
 	output+= param+" ";
 	output+= time || "";
-	console.log(output);
+	console.log(output.trim());
 }
 
 /**
@@ -54,9 +54,33 @@ export function shiftObject(object){
  */
 export function execute(param){
 	let {that, task, tasksRun, callback} = param;
+	let cp;
 	if(task.entry){
 		let start = process.hrtime();
-		exec(`node ${task.entry}`, (error, stout, stderr)=>{
+		cp = spawn(process.execPath, [task.entry]);
+		cp.stdout.on("data", (data) => {
+			let end = process.hrtime(start);
+			let args = {};
+			args.time = prettyHrtime(end);
+			args.task = task.alias;
+			that.emit("finish_task", args);
+            if(data){
+			    return `${data}`.trim();
+			    //process.stdout.write(`${data}`.trim());
+            }
+			if(callback && typeof callback === "function"){
+				callback(tasksRun);
+			}
+		});
+
+		cp.stderr.on('data', (data) => {
+			if(data){
+				that.emit("task_error_entry", task.entry);
+				return;
+			}
+		});
+
+		/*exec(`node ${task.entry}`, (error, stout, stderr)=>{
 			if(error){
 				that.emit("task_error_entry", task.entry);
 				return;
@@ -73,6 +97,7 @@ export function execute(param){
 				callback(tasksRun);
 			}
 		});
+		*/
 	}
 }
 
@@ -93,7 +118,7 @@ export function executeCommand(param){
 	output+=chalk.bold(`> Args: ${args.join(" ")} \n`);
 	console.log(output);
 	runCommand.stdout.on('data', (data) => {
-		console.log(`${data}`.trim());
+		console.log(`${data.trim()}`);
 	});
 	runCommand.stderr.on('data', (data) => {
 		console.log(`${data}`);

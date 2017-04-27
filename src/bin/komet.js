@@ -4,8 +4,9 @@ import Liftoff   from "liftoff";
 import * as util from "../lib/util";
 
 let argv = require('minimist')(process.argv.slice(2));
-let task = String(argv._[0]);
+let argTask = String(argv._[0]);
 let envKomet = argv.env;
+let option = argv.a || false;
 
 /**
  * @private
@@ -26,12 +27,14 @@ let versionCli = require("../package.json");
  */
 let callback = (env) => {
 	let {modulePackage, modulePath, configPath} = env;
+	let instKomet;
+	let params;
 	if(version && argv._.length === 0){
 		util.log(`CLI version ${versionCli.version}`);
 		if(modulePackage && typeof modulePackage.version !== "undefined"){
 			util.log(`Local version ${modulePackage.version}`);
 		}
-		process.exit(0);
+		process.exit(1);
 	}
 	if (!modulePath) {
 		util.log("Local komet not found");
@@ -41,11 +44,16 @@ let callback = (env) => {
 		util.log("No kometfile found");
 		process.exit(1);
 	}
-	let option = argv.a || false;
+	
 	require(configPath);
-	let instKomet = require(modulePath);
+	instKomet = require(modulePath);
 	loadEvents(instKomet);
-	instKomet.start.call(instKomet, task, option, envKomet);
+	params = {
+		argTask:argTask,
+		option:option,
+		envKomet:envKomet
+	}
+	instKomet.start.call(instKomet, params);
 };
 
 /**

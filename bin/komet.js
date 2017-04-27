@@ -18,8 +18,9 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var argv = require('minimist')(process.argv.slice(2));
-var task = String(argv._[0]);
+var argTask = String(argv._[0]);
 var envKomet = argv.env;
+var option = argv.a || false;
 
 /**
  * @private
@@ -43,12 +44,14 @@ var callback = function callback(env) {
 	    modulePath = env.modulePath,
 	    configPath = env.configPath;
 
+	var instKomet = void 0;
+	var params = void 0;
 	if (version && argv._.length === 0) {
 		util.log("CLI version " + versionCli.version);
 		if (modulePackage && typeof modulePackage.version !== "undefined") {
 			util.log("Local version " + modulePackage.version);
 		}
-		process.exit(0);
+		process.exit(1);
 	}
 	if (!modulePath) {
 		util.log("Local komet not found");
@@ -58,11 +61,16 @@ var callback = function callback(env) {
 		util.log("No kometfile found");
 		process.exit(1);
 	}
-	var option = argv.a || false;
+
 	require(configPath);
-	var instKomet = require(modulePath);
+	instKomet = require(modulePath);
 	loadEvents(instKomet);
-	instKomet.start.call(instKomet, task, option, envKomet);
+	params = {
+		argTask: argTask,
+		option: option,
+		envKomet: envKomet
+	};
+	instKomet.start.call(instKomet, params);
 };
 
 /**
