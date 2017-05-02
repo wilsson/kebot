@@ -12,5 +12,8 @@ fs.readFile('src/css/index.css', function(err, css){
             };
         });
 });
+if (process.env.production){
+	console.log("process.env.production>", process.env.production);
+};
 
-console.log("process.env.production>");
+console.log("My task css")

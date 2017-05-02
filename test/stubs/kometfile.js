@@ -1,16 +1,9 @@
-/**
- * @example
- * node ../../bin/komet.js komet css
- * node ../../bin/komet.js komet css -a
- *
- */
-
 var komet = require('komet');
 
 komet.task({
 	alias:"css",
 	entry:"./tasks/css.js",
-	sequential:["sprite", "fonts"]
+	sequential:["sprite", "babel-c"]
 });
 
 komet.task({
@@ -35,15 +28,25 @@ komet.task({
 
 komet.task({
 	alias:"static-s",
-	sequential:["css", "sprite", "fonts"]
+	sequential:["pug", "css", "sprite", "babel"]
 });
 
 komet.task({
-	alias:"watch",
-	parallel:["watch-css", "watch-pug", "watch-js"]
+	alias:"static-p",
+	parallel:["pug", "css", "sprite", "babel"]
+});
+
+komet.task({
+	alias:'babel-c',
+    command: "babel ./src -d ./lib",
+    sequential:["sprite"]
 });
 
 komet.task({
 	alias:'babel',
     command: "babel -w ./src -d ./lib"
+});
+
+komet.task({
+	alias:'nada'
 });

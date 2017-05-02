@@ -1,5 +1,1 @@
-const bar = "nensajito";
-
-let foo = () => {
-    return 'bar foo start';
-};
+let foo = 3242;

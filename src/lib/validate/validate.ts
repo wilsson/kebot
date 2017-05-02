@@ -1,18 +1,19 @@
 /**
  * @private
  */
+ 
 export class Validate{
-	string(entity){
+	public string(entity: string): void{
 		if(entity && typeof entity !== 'string'){
 			throw new Error(`${entity} needs to be a string`);
 		}
 	}
-	array(entity){
+	public array(entity: string[]): void{
 		if(!Array.isArray(entity)){
 			throw new Error(`${entity} needs to be a array`);
 		}
 	}
-	execute(type, alias){
+	public execute(type: string, alias: string[] | string): void{
 		let that = this;
 		that[type].apply(that, [].slice.call(arguments, 1));
 	}
