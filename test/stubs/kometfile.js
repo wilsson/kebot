@@ -35,7 +35,7 @@ komet.task({
 
 komet.task({
 	alias:"static-s",
-	sequential:["css", "sprite", "fonts"]
+	sequential:["pug", "css"]
 });
 
 komet.task({

@@ -20,7 +20,7 @@ log.error = function(param){
 	let output = "";
 	output+= `(${chalk.red(timestamp("HH:mm:ss"))})`;
 	output+= param;
-	console.log(output.trim());
+	console.log(output);
 };
 
 /**
@@ -34,7 +34,7 @@ export function log(param, time){
 	output+= `(${chalk.cyan(timestamp("HH:mm:ss"))})`;
 	output+= param+" ";
 	output+= time || "";
-	console.log(output.trim());
+	console.log(output);
 }
 
 /**
@@ -47,6 +47,16 @@ export function shiftObject(object){
 	delete object[key];
 	return firstObject;
 }
+/**
+ * @private
+ * @param {object} param
+ */
+ export function getArgsStout(task, end){
+ 	let args = {};
+	args.time = prettyHrtime(end);
+	args.task = task.alias;
+ 	return args;
+ }
 
 /**
  * @private
@@ -55,18 +65,17 @@ export function shiftObject(object){
 export function execute(param){
 	let {that, task, tasksRun, callback} = param;
 	let cp;
+	let dataExist = false;
 	if(task.entry){
 		let start = process.hrtime();
 		cp = spawn(process.execPath, [task.entry]);
 		cp.stdout.on("data", (data) => {
+			dataExist = true;
 			let end = process.hrtime(start);
-			let args = {};
-			args.time = prettyHrtime(end);
-			args.task = task.alias;
+			let args = this.getArgsStout(task, end);
 			that.emit("finish_task", args);
             if(data){
-			    return `${data}`.trim();
-			    //process.stdout.write(`${data}`.trim());
+			    process.stdout.write(`${data}`);
             }
 			if(callback && typeof callback === "function"){
 				callback(tasksRun);
@@ -75,29 +84,20 @@ export function execute(param){
 
 		cp.stderr.on('data', (data) => {
 			if(data){
-				that.emit("task_error_entry", task.entry);
+				process.stdout.write(`${data}`);
 				return;
 			}
 		});
 
-		/*exec(`node ${task.entry}`, (error, stout, stderr)=>{
-			if(error){
-				that.emit("task_error_entry", task.entry);
-				return;
-			}
-			let end = process.hrtime(start);
-			let args = {};
-			args.time = prettyHrtime(end);
-			args.task = task.alias;
-			that.emit("finish_task", args);
-            if(stout){
-			    console.log(stout.trim());
-            }
-			if(callback && typeof callback === "function"){
-				callback(tasksRun);
+		
+		cp.on('close', (code) => {
+			if(!dataExist){
+				let end = process.hrtime(start);
+			  	let args = this.getArgsStout(task, end);
+				that.emit("finish_task", args);
 			}
 		});
-		*/
+		
 	}
 }
 
@@ -116,13 +116,17 @@ export function executeCommand(param){
 	output+="\n";
 	output+=chalk.bold(`> Command: ${command} \n`);
 	output+=chalk.bold(`> Args: ${args.join(" ")} \n`);
-	console.log(output);
+	process.stdout.write(output);
 	runCommand.stdout.on('data', (data) => {
-		console.log(`${data.trim()}`);
+		process.stdout.write(`${data}`);
 	});
 	runCommand.stderr.on('data', (data) => {
-		console.log(`${data}`);
+		process.stdout.write(`${data}`);
 	});
+	/*
+	runCommand.on('close', (code) => {
+		  console.log(`runCommand child process exited with code ${code}`);
+	});*/
 }
 
 function getCommandForPlatform(command){

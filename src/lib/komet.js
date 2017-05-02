@@ -5,6 +5,8 @@ import * as _ from './util';
 const ENTRY = "ENTRY";
 const COMMAND = "COMMAND";
 const TASKS = "TASKS";
+const SEQUENTIAL = "SEQUENTIAL";
+const PARALLEL = "PARALLEL";
 
 /**
  * @since 0.0.1
@@ -89,12 +91,12 @@ export class Komet extends EventEmitter{
 					this.initEntry(foundTask, option);
 					break;
 				case COMMAND:
-					//this.initCommand(foundTask);
-					console.log("Ejecutar la tarea con el comando", type, foundTask);
+					this.initCommand(foundTask);
+					//console.log("Ejecutar la tarea con el comando", type, foundTask);
 					break;
 				case TASKS:
-					console.log("Ejecutar las tareas, no tiene ni entry ni comando", type, foundTask);
-					//this.initTasks();
+					//console.log("Ejecutar las tareas, no tiene ni entry ni comando", type, foundTask);
+					this.initTasks(foundTask);
 			}
 		}else{
 			this.emit('task_not_found', task);
@@ -152,20 +154,10 @@ export class Komet extends EventEmitter{
 			throw new Error("You can only have sequential dependency tasks");
 		}
 		if (sequential && option) {
-			this.dependencies(task);
+			this.sequentialProcess(task);
 		}else{
 			_.execute(param);
 		}
-		/*
-		if(task.dependsof && option){
-			this.dependencies(task);
-		}else{
-			_.execute(param);
-		}
-		if(!task.entry && !option && task.dependsof){
-			this.emit("task_not_entry", task);
-		}
-		*/
 	}
 
 	/**
@@ -182,29 +174,67 @@ export class Komet extends EventEmitter{
 
 	/**
 	 * @private
+	 */
+	 initTasks(task){
+	 	let { sequential, parallel } = task;
+	 	let tasks;
+	 	let type;
+	 	if(sequential){
+	 		tasks = sequential;
+	 		type = SEQUENTIAL;
+	 	}
+	 	if(parallel){
+	 		tasks = parallel;
+	 		type = PARALLEL;
+	 	}
+	 	let tasksRun = this.getDependsTasks(tasks);
+	 	console.log("tareas a ejecutar", tasksRun);
+	 	switch(type){
+			case SEQUENTIAL:
+				this.dependenciesRun(tasksRun);
+				break;
+
+			case PARALLEL:
+				console.log("ejecutar tareas en paralelo");
+				break;
+	 	}
+
+	 }
+
+	/**
+	 * @private
 	 * @param {object} task - Configuration to run the script with dependencies.
 	 */
-	dependencies(task){
-		let tasksRun = {};
+	sequentialProcess(task){
 		let { sequential, alias } = task;
-		let lengthTask = sequential.length;
-		for(let alias in this.tasks){
-			for(let i = 0; i < lengthTask; i++){
-				if(alias === sequential[i]){
-					tasksRun[alias] = this.tasks[alias];
+		let tasksRun = this.getDependsTasks(sequential);
+		tasksRun[alias] = task;
+		this.dependenciesRun(tasksRun);
+	}
+
+	/**
+	 * @private
+	 */
+	 getDependsTasks(dependencies){
+	 	let tasksRun = {};
+	 	for(let dependence of dependencies){
+			for(let task in this.tasks){
+				if(task === dependence){
+					tasksRun[task] = this.tasks[task];
+					console.log("tarea guardada", tasksRun[task]);
+					break;
 				}
 			}
 		}
-		tasksRun[alias] = task;
-		//console.log("tareas a ejecutarse >>>", tasksRun);
-		this.dependenciesRun(tasksRun);
-	}
+	 	return tasksRun;
+	 }
 
 	/**
 	 * @private
 	 * @param {object} tasksRun - All configurations to run.
 	 */
 	dependenciesRun(tasksRun){
+		//console.log("dependenciesRun tareas por parametro", tasksRun)
 		let task;
 		let params;
 		let runRecursive = (tasksRun)=>{
