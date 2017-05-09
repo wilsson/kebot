@@ -160,25 +160,6 @@ export class Komet extends EventEmitter{
 
 	/**
 	 * @private
-	 * @param {Object} task - Task found.
-	 */
-	initCommand(task){
-		let param = {
-			that:this,
-			task:task
-		};
-		if (parallel && option) {
-			throw new Error("You can only have sequential dependency tasks");
-		}
-		if (sequential && option) {
-			this.dependenciesTask(task);
-		}else{
-			_.execute(param);
-		}
-	}
-
-	/**
-	 * @private
 	 * @param {object} task
 	 */
 	 initTasks(task){
