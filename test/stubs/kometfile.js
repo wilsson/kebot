@@ -44,6 +44,12 @@ komet.task({
 });
 
 komet.task({
+	alias:'babel-d',
+    command: "babel -w ./src -d ./lib",
+    sequential:["sprite"]
+});
+
+komet.task({
 	alias:'babel',
     command: "babel -w ./src -d ./lib"
 });

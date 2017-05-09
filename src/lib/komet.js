@@ -2,11 +2,12 @@ import EventEmitter from 'events';
 import validate from './validate';
 import * as _ from './util';
 
-const ENTRY = "ENTRY";
-const COMMAND = "COMMAND";
-const TASKS = "TASKS";
-const SEQUENTIAL = "SEQUENTIAL";
-const PARALLEL = "PARALLEL";
+const TYPE = {};
+TYPE.ENTRY = "ENTRY";
+TYPE.COMMAND = "COMMAND";
+TYPE.TASKS = "TASKS";
+TYPE.SEQUENTIAL = "SEQUENTIAL";
+TYPE.PARALLEL = "PARALLEL";
 
 /**
  * @since 0.0.1
@@ -63,7 +64,7 @@ export class Komet extends EventEmitter{
 		let task = this.validateTask(config);
 		Object.assign(this.tasks, task);
 	}
-	
+
 	/**
 	 * @private
 	 * @param {array} tastas - kask from cli.
@@ -88,15 +89,11 @@ export class Komet extends EventEmitter{
 		if(foundTask){
 			type = this.verifyTypeTask(foundTask);
 			switch(type){
-				case ENTRY:
-					this.initEntry(foundTask, option);
+				case TYPE.ENTRY:
+				case TYPE.COMMAND:
+					this.initEntryOrCommand(foundTask, option);
 					break;
-				case COMMAND:
-					this.initCommand(foundTask);
-					//console.log("Ejecutar la tarea con el comando", type, foundTask);
-					break;
-				case TASKS:
-					//console.log("Ejecutar las tareas, no tiene ni entry ni comando", type, foundTask);
+				case TYPE.TASKS:
 					this.initTasks(foundTask);
 			}
 		}else{
@@ -118,25 +115,23 @@ export class Komet extends EventEmitter{
 	 * @return {string} type - Type of task.
 	 */
 	verifyTypeTask(foundTask){
-		//console.log("verifyTypeTask foundTask >", foundTask);
 		let { entry, command } = foundTask;
 		let valid = false;
 		let type;
 		let count = 0;
 		if(entry){
-			type = ENTRY;
+			type = TYPE.ENTRY;
 			count++;
 		}
 		if(command){
-			type = COMMAND;
+			type = TYPE.COMMAND;
 			count++;
 		}
-		//console.log("count>", count);
 		if (count > 1) {
 			throw new Error("You can not have entry and commando together");
 		}
 		if (!count) {
-			type = TASKS;
+			type = TYPE.TASKS;
 		}
 		return type;
 	}
@@ -146,7 +141,7 @@ export class Komet extends EventEmitter{
 	 * @param {Object} task - Task found.
 	 * @param {boolean} option -Whether it is dependent or not.
 	 */
-	initEntry(task, option){
+	initEntryOrCommand(task, option){
 		let { sequential, parallel } = task;
 		let param = {
 			that:this,
@@ -156,7 +151,8 @@ export class Komet extends EventEmitter{
 			throw new Error("You can only have sequential dependency tasks");
 		}
 		if (sequential && option) {
-			this.sequentialProcess(task);
+			console.log("tarea con flag");
+			this.dependenciesTask(task);
 		}else{
 			_.execute(param);
 		}
@@ -171,7 +167,14 @@ export class Komet extends EventEmitter{
 			that:this,
 			task:task
 		};
-		_.executeCommand(param);
+		if (parallel && option) {
+			throw new Error("You can only have sequential dependency tasks");
+		}
+		if (sequential && option) {
+			this.dependenciesTask(task);
+		}else{
+			_.execute(param);
+		}
 	}
 
 	/**
@@ -185,11 +188,10 @@ export class Komet extends EventEmitter{
 		let tasksRun = tasks && this.getDependsTasks(tasks);
 		if (tasksRun) {
 			switch(type){
-				case SEQUENTIAL:
-					this.dependenciesRun(tasksRun);
+				case TYPE.SEQUENTIAL:
+					this.runDependenciesSequential(tasksRun);
 					break;
-				case PARALLEL:
-					console.log("ejecutar tareas en paralelo");
+				case TYPE.PARALLEL:
 					this.runDependenciesParallel(tasksRun);
 					break;
 			}
@@ -217,10 +219,10 @@ export class Komet extends EventEmitter{
 	getTypeTasks(sequential, parallel){
 		let type;
 		if (sequential) {
-			type = SEQUENTIAL;
+			type = TYPE.SEQUENTIAL;
 		}
 		if (parallel) {
-			type = PARALLEL;
+			type = TYPE.PARALLEL;
 		}
 		return type;
 	 }
@@ -229,11 +231,11 @@ export class Komet extends EventEmitter{
 	 * @private
 	 * @param {object} task - Configuration to run the script with dependencies.
 	 */
-	sequentialProcess(task){
+	dependenciesTask(task){
 		let { sequential, alias } = task;
 		let tasksRun = this.getDependsTasks(sequential);
 		tasksRun[alias] = task;
-		this.dependenciesRun(tasksRun);
+		this.runDependenciesSequential(tasksRun);
 	}
 
 	/**
@@ -257,8 +259,7 @@ export class Komet extends EventEmitter{
 	 * @private
 	 * @param {object} tasksRun - All configurations to run.
 	 */
-	dependenciesRun(tasksRun){
-		//console.log("dependenciesRun tareas por parametro", tasksRun)
+	runDependenciesSequential(tasksRun){
 		let task;
 		let params;
 		let runRecursive = (tasksRun)=>{
