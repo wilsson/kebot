@@ -35,12 +35,12 @@ komet.task({
 
 komet.task({
 	alias:"static-s",
-	sequential:["pug", "css"]
+	sequential:["pug", "css", "sprite", "babel"]
 });
 
 komet.task({
-	alias:"watch",
-	parallel:["watch-css", "watch-pug", "watch-js"]
+	alias:"static-p",
+	parallel:["pug", "css", "sprite", "babel"]
 });
 
 komet.task({

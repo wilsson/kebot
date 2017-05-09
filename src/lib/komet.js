@@ -63,6 +63,7 @@ export class Komet extends EventEmitter{
 		let task = this.validateTask(config);
 		Object.assign(this.tasks, task);
 	}
+	
 	/**
 	 * @private
 	 * @param {array} tastas - kask from cli.
@@ -73,7 +74,7 @@ export class Komet extends EventEmitter{
 		let foundTask;
 		let type;
 		if (envKomet) {
-        	this.createEnv(envKomet);
+			this.createEnv(envKomet);
 		}
 		if(!argTask){
 			throw new Error('Not alias task for argument');
@@ -102,13 +103,14 @@ export class Komet extends EventEmitter{
 			this.emit('task_not_found', task);
 		}
 	}
+
 	/**
 	 * @private
 	 * @param {string} env - enviroment a create.
 	 */
-    createEnv(env){
-        process.env[env] = env;
-    }
+	createEnv(env){
+		process.env[env] = env;
+	}
 
 	/**
 	 * @private
@@ -174,31 +176,53 @@ export class Komet extends EventEmitter{
 
 	/**
 	 * @private
+	 * @param {object} task
 	 */
 	 initTasks(task){
-	 	let { sequential, parallel } = task;
-	 	let tasks;
-	 	let type;
-	 	if(sequential){
-	 		tasks = sequential;
-	 		type = SEQUENTIAL;
-	 	}
-	 	if(parallel){
-	 		tasks = parallel;
-	 		type = PARALLEL;
-	 	}
-	 	let tasksRun = this.getDependsTasks(tasks);
-	 	console.log("tareas a ejecutar", tasksRun);
-	 	switch(type){
-			case SEQUENTIAL:
-				this.dependenciesRun(tasksRun);
-				break;
+		let { sequential, parallel } = task;
+		let tasks = sequential || parallel;
+		let type = this.getTypeTasks(sequential, parallel);
+		let tasksRun = tasks && this.getDependsTasks(tasks);
+		if (tasksRun) {
+			switch(type){
+				case SEQUENTIAL:
+					this.dependenciesRun(tasksRun);
+					break;
+				case PARALLEL:
+					console.log("ejecutar tareas en paralelo");
+					this.runDependenciesParallel(tasksRun);
+					break;
+			}
+		}
+	}
 
-			case PARALLEL:
-				console.log("ejecutar tareas en paralelo");
-				break;
-	 	}
-
+	/**
+	 * @private
+	 * @param {object} tasksRun
+	 */
+	runDependenciesParallel(tasksRun){
+		for(let task in tasksRun){
+			let params = {
+				that:this,
+				task:tasksRun[task]
+			};
+			_.execute(params);
+		}
+	}
+	/**
+	 * @private
+	 * @param {string} sequential
+	 * @param {string} parallel
+	 */
+	getTypeTasks(sequential, parallel){
+		let type;
+		if (sequential) {
+			type = SEQUENTIAL;
+		}
+		if (parallel) {
+			type = PARALLEL;
+		}
+		return type;
 	 }
 
 	/**
@@ -214,19 +238,19 @@ export class Komet extends EventEmitter{
 
 	/**
 	 * @private
+	 * @param {array} dependencies
 	 */
 	 getDependsTasks(dependencies){
-	 	let tasksRun = {};
-	 	for(let dependence of dependencies){
+		let tasksRun = {};
+		for(let dependence of dependencies){
 			for(let task in this.tasks){
 				if(task === dependence){
 					tasksRun[task] = this.tasks[task];
-					console.log("tarea guardada", tasksRun[task]);
 					break;
 				}
 			}
 		}
-	 	return tasksRun;
+		return tasksRun;
 	 }
 
 	/**
@@ -252,5 +276,3 @@ export class Komet extends EventEmitter{
 		runRecursive(tasksRun);
 	}
 }
-
-//1:21
