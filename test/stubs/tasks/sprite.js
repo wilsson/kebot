@@ -1,1 +1,1 @@
-console.log("My task sprite");
+console.log("task sprite");

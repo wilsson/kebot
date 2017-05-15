@@ -9,7 +9,7 @@ var komet = require('komet');
 
 komet.task({
 	alias:"css",
-	entry:"./tasks/css.js",
+	entry:"./tasks/csss.js",
 	sequential:["sprite", "fonts"]
 });
 

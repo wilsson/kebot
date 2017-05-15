@@ -4,9 +4,9 @@ import * as Liftoff from "liftoff";
 import * as util from "../lib/util";
 
 let argv = require('minimist')(process.argv.slice(2));
-let argTask = String(argv._[0]);
-let envKomet = argv.env;
-let option = argv.a || false;
+let argTask: string = String(argv._[0]);
+let envKomet: string = argv.env;
+let option: boolean = argv.a || false;
 
 /**
  * @private
@@ -17,20 +17,20 @@ let cli = new Liftoff({
 	extensions: interpret.jsVariants
 });
 
-let version = argv.v || argv.version;
-let versionCli = require("../package.json");
+let argVersion: string = argv.v || argv.version;
+let versionCli: string = require("../package.json").version;
 
 /**
  * @private
  * @desc Callback for initialize aplication.
  * @param {Object} env - Instance of Liftoff.
  */
-let callback = (env) => {
+let callback = (env): void =>{
 	let { modulePackage, modulePath, configPath } = env;
 	let instKomet;
 	let params;
-	if(version && argv._.length === 0){
-		util.log(`CLI version ${versionCli.version}`);
+	if(argVersion && argv._.length === 0){
+		util.log(`CLI version ${versionCli}`);
 		if(modulePackage && typeof modulePackage.version !== "undefined"){
 			util.log(`Local version ${modulePackage.version}`);
 		}
@@ -60,7 +60,7 @@ let callback = (env) => {
  * @private
  * @param {Object} inst - Instance of komet.
  */
-let loadEvents = (inst) => {
+let loadEvents = (inst): void => {
 	inst.on("finish_task", (e) => {
 		util.log(`Finish task ${e.task} in`, e.time);
 	});

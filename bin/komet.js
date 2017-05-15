@@ -16,8 +16,8 @@ var cli = new Liftoff({
     name: 'komet',
     extensions: interpret.jsVariants
 });
-var version = argv.v || argv.version;
-var versionCli = require("../package.json");
+var argVersion = argv.v || argv.version;
+var versionCli = require("../package.json").version;
 /**
  * @private
  * @desc Callback for initialize aplication.
@@ -27,8 +27,8 @@ var callback = function (env) {
     var modulePackage = env.modulePackage, modulePath = env.modulePath, configPath = env.configPath;
     var instKomet;
     var params;
-    if (version && argv._.length === 0) {
-        util.log("CLI version " + versionCli.version);
+    if (argVersion && argv._.length === 0) {
+        util.log("CLI version " + versionCli);
         if (modulePackage && typeof modulePackage.version !== "undefined") {
             util.log("Local version " + modulePackage.version);
         }

@@ -1,9 +1,5 @@
-import { EventEmitter } from 'events';
-import validate from './validate';
-import * as _ from './util';
-import TYPE  from './type';
-
 /**
+ * @author Wilson Flores <wilsonft83@gmail.com>
  * @since 0.0.1
  * @example
  * var komet = require("komet");
@@ -13,8 +9,22 @@ import TYPE  from './type';
  *  entry:'task-one.js'
  * });
  */
+
+import { EventEmitter } from 'events';
+import validate from './validate';
+import * as _ from './util';
+import TYPE  from './type';
+
+interface Task{
+	alias:string,
+	command:string,
+	entry:string,
+	sequential:string[],
+	parallel:string[]
+}
+
 export class Komet extends EventEmitter{
-	tasks = {};
+	private tasks = {};
 
 	constructor(){
 		super();
@@ -26,7 +36,7 @@ export class Komet extends EventEmitter{
 	 * @param {Object} config - Task configuration object.
 	 * @return {Object} task - Subscribed task.
 	 */
-	validateTask(config){
+	private validateTask(config: Task){
 		let { alias, entry, sequential } = config;
 		let task = {};
 		validate.execute('string', alias);
@@ -48,17 +58,15 @@ export class Komet extends EventEmitter{
 	 * @param {string} config.entry - The path of your node script.
 	 * @param {Array} config.dependsof - Task dependencies.
 	 */
-	task(config): void{
+	public task(config: Task): void{
 		let task = this.validateTask(config);
 		(<any>Object).assign(this.tasks, task);
 	}
 
 	/**
 	 * @private
-	 * @param {array} tastas - kask from cli.
-	 * @param {boolean} option - Whether it is dependent or not.
 	 */
-	start(params): void{
+	public start(params): void{
 		let { argTask, option, envKomet } = params;
 		let foundTask;
 		let type;
@@ -93,7 +101,7 @@ export class Komet extends EventEmitter{
 	 * @private
 	 * @param {string} env - enviroment a create.
 	 */
-	createEnv(env): void{
+	private createEnv(env): void{
 		process.env[env] = env;
 	}
 
@@ -102,7 +110,7 @@ export class Komet extends EventEmitter{
 	 * @param {Object} foundTask - Task found.
 	 * @return {string} type - Type of task.
 	 */
-	verifyTypeTask(foundTask): string{
+	private verifyTypeTask(foundTask): string{
 		let { entry, command } = foundTask;
 		let valid: boolean = false;
 		let type: string;
@@ -129,7 +137,7 @@ export class Komet extends EventEmitter{
 	 * @param {Object} task - Task found.
 	 * @param {boolean} option -Whether it is dependent or not.
 	 */
-	initEntryOrCommand(task, option: boolean): void{
+	private initEntryOrCommand(task: Task, option: boolean): void{
 		let { sequential, parallel } = task;
 		let param = {
 			that:this,
@@ -139,7 +147,6 @@ export class Komet extends EventEmitter{
 			throw new Error("You can only have sequential dependency tasks");
 		}
 		if (sequential && option) {
-			console.log("tarea con flag");
 			this.dependenciesTask(task);
 		}else{
 			_.execute(param);
@@ -150,7 +157,7 @@ export class Komet extends EventEmitter{
 	 * @private
 	 * @param {object} task
 	 */
-	 initTasks(task): void{
+	 private initTasks(task: Task): void{
 		let { sequential, parallel } = task;
 		let tasks: string[] = sequential || parallel;
 		let type: string = this.getTypeTasks(sequential, parallel);
@@ -171,7 +178,7 @@ export class Komet extends EventEmitter{
 	 * @private
 	 * @param {object} tasksRun
 	 */
-	runDependenciesParallel(tasksRun): void{
+	private runDependenciesParallel(tasksRun): void{
 		for(let task in tasksRun){
 			let params = {
 				that:this,
@@ -185,7 +192,7 @@ export class Komet extends EventEmitter{
 	 * @param {string} sequential
 	 * @param {string} parallel
 	 */
-	getTypeTasks(sequential, parallel): string{
+	private getTypeTasks(sequential: string[], parallel: string[]): string{
 		let type: string;
 		if (sequential) {
 			type = TYPE.SEQUENTIAL;
@@ -200,7 +207,7 @@ export class Komet extends EventEmitter{
 	 * @private
 	 * @param {object} task - Configuration to run the script with dependencies.
 	 */
-	dependenciesTask(task): void{
+	private dependenciesTask(task: Task): void{
 		let { sequential, alias } = task;
 		let tasksRun = this.getDependsTasks(sequential);
 		tasksRun[alias] = task;
@@ -211,7 +218,7 @@ export class Komet extends EventEmitter{
 	 * @private
 	 * @param {array} dependencies
 	 */
-	 getDependsTasks(dependencies){
+	 private getDependsTasks(dependencies: string[]){
 		let tasksRun = {};
 		for(let dependence of dependencies){
 			for(let task in this.tasks){
@@ -228,10 +235,10 @@ export class Komet extends EventEmitter{
 	 * @private
 	 * @param {object} tasksRun - All configurations to run.
 	 */
-	runDependenciesSequential(tasksRun): void{
-		let task;
+	private runDependenciesSequential(tasksRun): void{
+		let task: Task;
 		let params;
-		let runRecursive = (tasksRun)=>{
+		let runRecursive = (tasksRun) => {
 			if(Object.keys(tasksRun).length){
 				task = _.shiftObject(tasksRun);
 				params = {

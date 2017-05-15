@@ -1,3 +1,8 @@
+/**
+ * @interface
+ * @desc Type task
+ */
+
 interface Types{
 	ENTRY:string,
 	COMMAND:string,

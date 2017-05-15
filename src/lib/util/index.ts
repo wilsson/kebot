@@ -1,17 +1,17 @@
 import * as prettyHrtime from "pretty-hrtime";
 import * as chalk from "chalk";
 import * as timestamp from "time-stamp";
+import * as fs from "fs";
+import * as path from "path";
 import { exec } from "child_process";
 import { spawn } from "child_process";
-import fs = require("fs");
-import path = require("path");
 
 /**
  * @private
  * @param {string} param - String for log error.
  */
 export function error(param: string): void{
-	let output = "";
+	let output: string = "";
 	output+= `(${chalk.red(timestamp("HH:mm:ss"))})`;
 	output+= param;
 	console.log(output);
@@ -21,7 +21,7 @@ export function error(param: string): void{
  * @private
  */
 export function log(param: string, time?: string): void{
-	let output = "";
+	let output: string = "";
 	if(time){
 		time = chalk.magenta(time);
 	}
@@ -36,7 +36,7 @@ export function log(param: string, time?: string): void{
  * @param {object} object - Object to treat.
  */
 export function shiftObject(object){
-	let key = Object.keys(object)[0];
+	let key: string = Object.keys(object)[0];
 	let firstObject = object[key];
 	delete object[key];
 	return firstObject;
@@ -46,7 +46,7 @@ export function shiftObject(object){
  * @private
  * @param {object} param
  */
-export function execute(param){
+export function execute(param): void{
 	let { task } = param;
 	if(task.entry){
 		executeEntry(param)
@@ -59,9 +59,9 @@ export function execute(param){
  * @private
  * @param {object} param
  */
- export function executeEntry(param){
+ export function executeEntry(param): void{
 	let { that, task, tasksRun, callback } = param;
-	let dataExist = false;
+	let dataExist: boolean = false;
 	let start = process.hrtime();
 	let cp = spawn(process.execPath, [task.entry]);
 	cp.stdout.on("data", (data) => {
@@ -98,15 +98,15 @@ export function execute(param){
  * @private
  * @param {object} param
  */
-export function executeCommand(param){
+export function executeCommand(param): void{
 	let { task, that, task : { command: cmd }}  = param;
-	let chunksCommand = cmd.split(/\s/);
+	let chunksCommand: string[] = cmd.split(/\s/);
 	let [command, ...args] = chunksCommand;
 	command = getCommandForPlatform(command);
-	let pathAbsolute = path.resolve(`./node_modules/.bin/${command}`);
+	let pathAbsolute: string = path.resolve(`./node_modules/.bin/${command}`);
 	let start = process.hrtime();
 	let cp = spawn(pathAbsolute, args);
-	let output = "";
+	let output: string = "";
 	output+="\n";
 	output+=chalk.bold(`> Command: ${command} \n`);
 	output+=chalk.bold(`> Args: ${args.join(" ")} \n`);
@@ -137,7 +137,7 @@ function getArgsStout(task, end){
  * @private
  * @param {string} command
  */
-function getCommandForPlatform(command){
+function getCommandForPlatform(command: string): string{
 	if(process.platform === "win32" )
 		return `${command}.cmd`;
 	return command;
