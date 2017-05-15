@@ -1,16 +1,16 @@
-import prettyHrtime from "pretty-hrtime";
-import chalk from "chalk";
-import timestamp from "time-stamp";
+import * as prettyHrtime from "pretty-hrtime";
+import * as chalk from "chalk";
+import * as timestamp from "time-stamp";
 import { exec } from "child_process";
 import { spawn } from "child_process";
-import fs from "fs";
-import path from "path";
+import fs = require("fs");
+import path = require("path");
 
 /**
  * @private
  * @param {string} param - String for log error.
  */
-log.error = function(param){
+export function error(param: string): void{
 	let output = "";
 	output+= `(${chalk.red(timestamp("HH:mm:ss"))})`;
 	output+= param;
@@ -20,7 +20,7 @@ log.error = function(param){
 /**
  * @private
  */
-export function log(param, time){
+export function log(param: string, time?: string): void{
 	let output = "";
 	if(time){
 		time = chalk.magenta(time);
@@ -127,7 +127,7 @@ export function executeCommand(param){
  * @param {object} param
  */
 function getArgsStout(task, end){
-	let args = {};
+	let args = <any>{};
 	args.time = prettyHrtime(end);
 	args.task = task.alias;
 	return args;

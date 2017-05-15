@@ -1,6 +1,6 @@
 #!/usr/bin/env node
-import interpret from "interpret";
-import Liftoff   from "liftoff";
+import * as interpret from "interpret";
+import * as Liftoff from "liftoff";
 import * as util from "../lib/util";
 
 let argv = require('minimist')(process.argv.slice(2));
@@ -26,7 +26,7 @@ let versionCli = require("../package.json");
  * @param {Object} env - Instance of Liftoff.
  */
 let callback = (env) => {
-	let {modulePackage, modulePath, configPath} = env;
+	let { modulePackage, modulePath, configPath } = env;
 	let instKomet;
 	let params;
 	if(version && argv._.length === 0){
@@ -66,15 +66,15 @@ let loadEvents = (inst) => {
 	});
 
 	inst.on("task_not_found", (e) => {
-		util.log.error(`Task ${e} not found`);
+		util.error(`Task ${e} not found`);
 	});
 
 	inst.on("task_error_entry", (e) => {
-		util.log.error(`Error in ${e}`);
+		util.error(`Error in ${e}`);
 	});
 
 	inst.on("task_not_entry", (e) => {
-		util.log.error(`Not entry ${e.alias} use flag -a`);
+		util.error(`Not entry ${e.alias} use flag -a`);
 	});
 };
 
