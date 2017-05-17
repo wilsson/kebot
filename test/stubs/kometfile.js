@@ -9,8 +9,8 @@ var komet = require('komet');
 
 komet.task({
 	alias:"css",
-	entry:"./tasks/csss.js",
-	sequential:["sprite", "fonts"]
+	entry:"./tasks/css.js",
+	sequential:["sprite", "babel-c"]
 });
 
 komet.task({
@@ -30,7 +30,7 @@ komet.task({
 
 komet.task({
 	alias:"pug",
-	entry:"./tasks/pug.js"
+	entry:"./tasks/pug.sjs"
 });
 
 komet.task({
@@ -44,8 +44,8 @@ komet.task({
 });
 
 komet.task({
-	alias:'babel-d',
-    command: "babel -w ./src -d ./lib",
+	alias:'babel-c',
+    command: "babel ./src -d ./lib",
     sequential:["sprite"]
 });
 

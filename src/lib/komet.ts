@@ -37,16 +37,25 @@ export class Komet extends EventEmitter{
 	 * @return {Object} task - Subscribed task.
 	 */
 	private validateTask(config: Task){
-		let { alias, entry, sequential } = config;
+		let { alias, entry, sequential, parallel, command } = config;
 		let task = {};
 		validate.execute('string', alias);
 		validate.execute('string', entry);
+		validate.execute('string', command);
 		if(sequential){
 			validate.execute('array', sequential);
 			for(const dependence of sequential){
 				validate.execute('string', dependence);
 			}
 		}
+
+		if(parallel){
+			validate.execute('array', parallel);
+			for(const dependence of parallel){
+				validate.execute('string', dependence);
+			}
+		}
+		
 		task[alias] = config;
 		return task;
 	}
@@ -68,8 +77,8 @@ export class Komet extends EventEmitter{
 	 */
 	public start(params): void{
 		let { argTask, option, envKomet } = params;
-		let foundTask;
-		let type;
+		let foundTask: Task;
+		let type: string;
 		if (envKomet) {
 			this.createEnv(envKomet);
 		}
@@ -81,7 +90,6 @@ export class Komet extends EventEmitter{
 				foundTask = this.tasks[alias];
 			}
 		}
-
 		if(foundTask){
 			type = this.verifyTypeTask(foundTask);
 			switch(type){
@@ -101,7 +109,7 @@ export class Komet extends EventEmitter{
 	 * @private
 	 * @param {string} env - enviroment a create.
 	 */
-	private createEnv(env): void{
+	private createEnv(env: string): void{
 		process.env[env] = env;
 	}
 
@@ -110,7 +118,7 @@ export class Komet extends EventEmitter{
 	 * @param {Object} foundTask - Task found.
 	 * @return {string} type - Type of task.
 	 */
-	private verifyTypeTask(foundTask): string{
+	private verifyTypeTask(foundTask: Task): string{
 		let { entry, command } = foundTask;
 		let valid: boolean = false;
 		let type: string;

@@ -47,11 +47,11 @@ export function shiftObject(object){
  * @param {object} param
  */
 export function execute(param): void{
-	let { task } = param;
-	if(task.entry){
+	let { task: { entry: entry, command: command} } = param;
+	if(entry){
 		executeEntry(param)
 	}
-	if(task.command){
+	if(command){
 		executeCommand(param);
 	}
 }
@@ -68,10 +68,10 @@ export function execute(param): void{
 		dataExist = true;
 		let end = process.hrtime(start);
 		let args = getArgsStout(task, end);
-		that.emit("finish_task", args);
 		if(data){
 			process.stdout.write(`${data}`);
 		}
+		that.emit("finish_task", args);
 		if(callback && typeof callback === "function"){
 			callback(tasksRun);
 		}
@@ -81,15 +81,6 @@ export function execute(param): void{
 		if(data){
 			process.stdout.write(`${data}`);
 			return;
-		}
-	});
-
-	
-	cp.on('close', (code) => {
-		if(!dataExist){
-			let end = process.hrtime(start);
-			let args = getArgsStout(task, end);
-			that.emit("finish_task", args);
 		}
 	});
  }
@@ -114,8 +105,8 @@ export function executeCommand(param): void{
 	cp.stdout.on('data', (data) => {
 		let end = process.hrtime(start);
 		let args = getArgsStout(task, end);
-		that.emit("finish_task", args);
 		process.stdout.write(`${data}`);
+		that.emit("finish_task", args);
 	});
 	cp.stderr.on('data', (data) => {
 		process.stdout.write(`${data}`);

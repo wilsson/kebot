@@ -3,5 +3,5 @@
 var bar = "nensajito";
 
 var foo = function foo() {
-    return 'bar foo start s';
+    return 'bar foo start :D';
 };
