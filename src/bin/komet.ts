@@ -62,7 +62,7 @@ let callback = (env): void =>{
  */
 let loadEvents = (inst): void => {
 	inst.on("finish_task", (e) => {
-		util.log(`Finish task ${e.task} in`, e.time);
+		util.log(`Finish task ${e.task}`);
 	});
 
 	inst.on("task_not_found", (e) => {

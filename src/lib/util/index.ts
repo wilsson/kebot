@@ -12,8 +12,8 @@ import { spawn } from "child_process";
  */
 export function error(param: string): void{
 	let output: string = "";
-	output+= `(${chalk.red(timestamp("HH:mm:ss"))})`;
-	output+= param;
+	output+= "- "+chalk.red(timestamp("HH:mm:ss"));
+	output+= " "+param+" ";
 	console.log(output);
 };
 
@@ -61,11 +61,9 @@ export function execute(param): void{
  */
  export function executeEntry(param): void{
 	let { that, task, tasksRun, callback } = param;
-	let start = process.hrtime();
 	let cp = spawn(process.execPath, [task.entry]);
 	cp.stdout.on("data", (data) => {
-		let end = process.hrtime(start);
-		let args = getArgsStout(task, end);
+		let args = getArgsStout(task);
 		if(data){
 			process.stdout.write(`${data}`);
 		}
@@ -95,21 +93,11 @@ export function executeCommand(param): void{
 	let pathAbsolute: string = path.resolve(`./node_modules/.bin/${command}`);
 	let start = process.hrtime();
 	let cp = spawn(pathAbsolute, args);
-	let status = true;
 	
 	cp.stdout.on('data', (data) => {
-		let end;
-		if (!status) {
-			// code...
-			end = process.hrtime(updateTime());
-		}else{
-			end = process.hrtime(start)
-		}
-		
-		let args = getArgsStout(task, end);
+		let args = getArgsStout(task);
 		process.stdout.write(`${data}`);
 		that.emit("finish_task", args);
-		status = false;
 	});
 
 	cp.stderr.on('data', (data) => {
@@ -125,9 +113,9 @@ function updateTime(){
  * @private
  * @param {object} param
  */
-function getArgsStout(task, end){
+function getArgsStout(task){
 	let args = <any>{};
-	args.time = prettyHrtime(end, {precise:true});
+	//args.time = prettyHrtime(end, {precise:true});
 	args.task = task.alias;
 	return args;
  }

@@ -58,7 +58,7 @@ var callback = function (env) {
  */
 var loadEvents = function (inst) {
     inst.on("finish_task", function (e) {
-        util.log("Finish task " + e.task + " in", e.time);
+        util.log("Finish task " + e.task);
     });
     inst.on("task_not_found", function (e) {
         util.error("Task " + e + " not found");
