@@ -25,8 +25,8 @@ export function log(param: string, time?: string): void{
 	if(time){
 		time = chalk.magenta(time);
 	}
-	output+= `(${chalk.cyan(timestamp("HH:mm:ss"))})`;
-	output+= param+" ";
+	output+= "- "+timestamp("HH:mm:ss");
+	output+= " "+param+" ";
 	output+= time || "";
 	console.log(output);
 }
@@ -61,11 +61,9 @@ export function execute(param): void{
  */
  export function executeEntry(param): void{
 	let { that, task, tasksRun, callback } = param;
-	let dataExist: boolean = false;
 	let start = process.hrtime();
 	let cp = spawn(process.execPath, [task.entry]);
 	cp.stdout.on("data", (data) => {
-		dataExist = true;
 		let end = process.hrtime(start);
 		let args = getArgsStout(task, end);
 		if(data){
@@ -97,21 +95,31 @@ export function executeCommand(param): void{
 	let pathAbsolute: string = path.resolve(`./node_modules/.bin/${command}`);
 	let start = process.hrtime();
 	let cp = spawn(pathAbsolute, args);
-	let output: string = "";
-	output+="\n";
-	output+=chalk.bold(`> Command: ${command} \n`);
-	output+=chalk.bold(`> Args: ${args.join(" ")} \n`);
-	process.stdout.write(output);
+	let status = true;
+	
 	cp.stdout.on('data', (data) => {
-		let end = process.hrtime(start);
+		let end;
+		if (!status) {
+			// code...
+			end = process.hrtime(updateTime());
+		}else{
+			end = process.hrtime(start)
+		}
+		
 		let args = getArgsStout(task, end);
 		process.stdout.write(`${data}`);
 		that.emit("finish_task", args);
+		status = false;
 	});
+
 	cp.stderr.on('data', (data) => {
 		process.stdout.write(`${data}`);
 	});
 }
+
+function updateTime(){
+	return process.hrtime();
+ }
 
 /**
  * @private
@@ -119,7 +127,7 @@ export function executeCommand(param): void{
  */
 function getArgsStout(task, end){
 	let args = <any>{};
-	args.time = prettyHrtime(end);
+	args.time = prettyHrtime(end, {precise:true});
 	args.task = task.alias;
 	return args;
  }
