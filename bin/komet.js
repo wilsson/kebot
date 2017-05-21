@@ -9,7 +9,6 @@ var argTask = String(argv._[0]);
 var envKomet = argv.env;
 var option = argv.a || false;
 /**
- * @private
  * @desc Instance of Liftoff.
  */
 var cli = new Liftoff({
@@ -19,15 +18,14 @@ var cli = new Liftoff({
 var argVersion = argv.v || argv.version;
 var versionCli = require("../package.json").version;
 /**
- * @private
  * @desc Callback for initialize aplication.
  * @param {Object} env - Instance of Liftoff.
  */
 var callback = function (env) {
     var modulePackage = env.modulePackage, modulePath = env.modulePath, configPath = env.configPath;
     var instKomet;
-    var params;
-    if (argVersion && argv._.length === 0) {
+    var args;
+    if (argVersion && !argv._.length) {
         util.log("CLI version " + versionCli);
         if (modulePackage && typeof modulePackage.version !== "undefined") {
             util.log("Local version " + modulePackage.version);
@@ -42,18 +40,19 @@ var callback = function (env) {
         util.log("No kometfile found");
         process.exit(1);
     }
+    console.log("configPath>", configPath);
+    console.log("modulePath>", modulePath);
     require(configPath);
     instKomet = require(modulePath);
     loadEvents(instKomet);
-    params = {
+    args = {
         argTask: argTask,
         option: option,
         envKomet: envKomet
     };
-    instKomet.start.call(instKomet, params);
+    instKomet.start.call(instKomet, args);
 };
 /**
- * @private
  * @param {Object} inst - Instance of komet.
  */
 var loadEvents = function (inst) {
@@ -63,15 +62,11 @@ var loadEvents = function (inst) {
     inst.on("task_not_found", function (e) {
         util.error("Task " + e + " not found");
     });
-    inst.on("task_error_entry", function (e) {
-        util.error("Error in " + e);
-    });
-    inst.on("task_not_entry", function (e) {
-        util.error("Not entry " + e.alias + " use flag -a");
+    inst.on("task_error", function (e) {
+        util.error("Error in task " + e);
     });
 };
 /**
- * @private
  * @desc Start aplication.
  */
 cli.launch({

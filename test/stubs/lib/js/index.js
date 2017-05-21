@@ -1,3 +1,3 @@
 "use strict";
 
-var foo = 1001;
+var foo = 3242;

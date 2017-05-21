@@ -1,10 +1,3 @@
-/**
- * @example
- * node ../../bin/komet.js komet css
- * node ../../bin/komet.js komet css -a
- *
- */
-
 var komet = require('komet');
 
 komet.task({
@@ -30,7 +23,7 @@ komet.task({
 
 komet.task({
 	alias:"pug",
-	entry:"./tasks/pug.sjs"
+	entry:"./tasks/pug.js"
 });
 
 komet.task({
@@ -52,4 +45,8 @@ komet.task({
 komet.task({
 	alias:'babel',
     command: "babel -w ./src -d ./lib"
+});
+
+komet.task({
+	alias:'nada'
 });

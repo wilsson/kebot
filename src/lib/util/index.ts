@@ -7,32 +7,31 @@ import { exec } from "child_process";
 import { spawn } from "child_process";
 
 /**
- * @private
+ * @desc log error for task
  * @param {string} param - String for log error.
  */
 export function error(param: string): void{
 	let output: string = "";
-	output+= "- "+chalk.red(timestamp("HH:mm:ss"));
-	output+= " "+param+" ";
+	output+= `- ${chalk.red(timestamp("HH:mm:ss"))}`;
+	output+= ` ${param} `;
 	console.log(output);
 };
 
 /**
- * @private
+ * @desc log for task
  */
 export function log(param: string, time?: string): void{
 	let output: string = "";
 	if(time){
 		time = chalk.magenta(time);
 	}
-	output+= "- "+timestamp("HH:mm:ss");
-	output+= " "+param+" ";
+	output+= `- ${timestamp("HH:mm:ss")}`;
+	output+= ` ${param} `;
 	output+= time || "";
 	console.log(output);
 }
 
 /**
- * @private
  * @param {object} object - Object to treat.
  */
 export function shiftObject(object){
@@ -43,7 +42,6 @@ export function shiftObject(object){
 }
 
 /**
- * @private
  * @param {object} param
  */
 export function execute(param): void{
@@ -56,7 +54,6 @@ export function execute(param): void{
 	}
 }
 /**
- * @private
  * @param {object} param
  */
  export function executeEntry(param): void{
@@ -75,6 +72,7 @@ export function execute(param): void{
 
 	cp.stderr.on('data', (data) => {
 		if(data){
+			that.emit("task_error", task.alias);
 			process.stdout.write(`${data}`);
 			return;
 		}
@@ -82,7 +80,6 @@ export function execute(param): void{
  }
 
 /**
- * @private
  * @param {object} param
  */
 export function executeCommand(param): void{
@@ -101,16 +98,12 @@ export function executeCommand(param): void{
 	});
 
 	cp.stderr.on('data', (data) => {
+		console.log(`Error in task ${task.alias}`);
 		process.stdout.write(`${data}`);
 	});
 }
 
-function updateTime(){
-	return process.hrtime();
- }
-
 /**
- * @private
  * @param {object} param
  */
 function getArgsStout(task){
@@ -121,7 +114,6 @@ function getArgsStout(task){
  }
 
 /**
- * @private
  * @param {string} command
  */
 function getCommandForPlatform(command: string): string{

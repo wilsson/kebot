@@ -9,7 +9,6 @@ let envKomet: string = argv.env;
 let option: boolean = argv.a || false;
 
 /**
- * @private
  * @desc Instance of Liftoff.
  */
 let cli = new Liftoff({
@@ -21,15 +20,14 @@ let argVersion: string = argv.v || argv.version;
 let versionCli: string = require("../package.json").version;
 
 /**
- * @private
  * @desc Callback for initialize aplication.
  * @param {Object} env - Instance of Liftoff.
  */
 let callback = (env): void =>{
 	let { modulePackage, modulePath, configPath } = env;
 	let instKomet;
-	let params;
-	if(argVersion && argv._.length === 0){
+	let args;
+	if(argVersion && !argv._.length){
 		util.log(`CLI version ${versionCli}`);
 		if(modulePackage && typeof modulePackage.version !== "undefined"){
 			util.log(`Local version ${modulePackage.version}`);
@@ -44,20 +42,20 @@ let callback = (env): void =>{
 		util.log("No kometfile found");
 		process.exit(1);
 	}
-	
+	console.log("configPath>", configPath);
+	console.log("modulePath>", modulePath);
 	require(configPath);
 	instKomet = require(modulePath);
 	loadEvents(instKomet);
-	params = {
+	args = {
 		argTask:argTask,
 		option:option,
 		envKomet:envKomet
-	}
-	instKomet.start.call(instKomet, params);
+	};
+	instKomet.start.call(instKomet, args);
 };
 
 /**
- * @private
  * @param {Object} inst - Instance of komet.
  */
 let loadEvents = (inst): void => {
@@ -69,17 +67,12 @@ let loadEvents = (inst): void => {
 		util.error(`Task ${e} not found`);
 	});
 
-	inst.on("task_error_entry", (e) => {
-		util.error(`Error in ${e}`);
-	});
-
-	inst.on("task_not_entry", (e) => {
-		util.error(`Not entry ${e.alias} use flag -a`);
+	inst.on("task_error", (e) => {
+		util.error(`Error in task ${e}`);
 	});
 };
 
 /**
- * @private
  * @desc Start aplication.
  */
 cli.launch({
