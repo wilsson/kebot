@@ -1,22 +1,22 @@
-import komet from '../lib';
+var komet = require("../lib");
 
-const demo = {
+var demo = {
 	alias:"css",
 	entry:'./tasks/css.js',
-	dependsof:['sprite', 'fonts', 'other']
+	sequential:["sprite"]
 };
 
-let task = komet.validateTask(demo);
+var task = komet.validateTask(demo);
 task = task[demo.alias];
 
-test('Alias for task', () => {
+test('Alias for task', function(){
     expect(task.alias).toEqual(demo.alias);
 });
 
-test('Entry for task', () => {
+test('Entry for task', function(){
     expect(task.entry).toEqual(demo.entry);
 });
 
-test('Dependencies for task', () => {
+test('Dependencies for task', function(){
     expect(task.dependsof).toEqual(demo.dependsof);
 });

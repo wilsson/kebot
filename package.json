@@ -3,12 +3,14 @@
   "version": "0.0.1",
   "description": "",
   "main": "lib/index.js",
+  "bin": {
+    "komet": "./bin/komet.js"
+  },
   "directories": {
     "test": "test"
   },
   "scripts": {
     "test": "jest ./test/index.test.js",
-    "babel": "babel -w ./src -d ./",
     "build": "tsc -w",
     "esdoc": "esdoc"
   },
@@ -24,7 +26,6 @@
   "homepage": "https://github.com/wilsson/komet#readme",
   "devDependencies": {
     "@types/node": "^7.0.18",
-    "babel-jest": "^19.0.0",
     "esdoc": "^0.5.2",
     "jest": "^18.1.0",
     "typescript": "^2.3.2"
