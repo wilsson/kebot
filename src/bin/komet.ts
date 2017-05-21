@@ -42,8 +42,6 @@ let callback = (env): void =>{
 		util.log("No kometfile found");
 		process.exit(1);
 	}
-	console.log("configPath>", configPath);
-	console.log("modulePath>", modulePath);
 	require(configPath);
 	instKomet = require(modulePath);
 	loadEvents(instKomet);
