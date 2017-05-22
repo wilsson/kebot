@@ -5,14 +5,14 @@ import * as util from "../lib/util";
 
 let argv = require('minimist')(process.argv.slice(2));
 let argTask: string = String(argv._[0]);
-let envKomet: string = argv.env;
+let envKobol: string = argv.env;
 let option: boolean = argv.a || false;
 
 /**
  * @desc Instance of Liftoff.
  */
 let cli = new Liftoff({
-	name: 'komet',
+	name: 'kobol',
 	extensions: interpret.jsVariants
 });
 
@@ -25,7 +25,7 @@ let versionCli: string = require("../package.json").version;
  */
 let callback = (env): void =>{
 	let { modulePackage, modulePath, configPath } = env;
-	let instKomet;
+	let instKobol;
 	let args;
 	if(argVersion && !argv._.length){
 		util.log(`CLI version ${versionCli}`);
@@ -35,26 +35,26 @@ let callback = (env): void =>{
 		process.exit(1);
 	}
 	if (!modulePath) {
-		util.log("Local komet not found");
+		util.log("Local kobol not found");
 		process.exit(1);
 	}
 	if (!configPath) {
-		util.log("No kometfile found");
+		util.log("No kobolfile found");
 		process.exit(1);
 	}
 	require(configPath);
-	instKomet = require(modulePath);
-	loadEvents(instKomet);
+	instKobol = require(modulePath);
+	loadEvents(instKobol);
 	args = {
 		argTask:argTask,
 		option:option,
-		envKomet:envKomet
+		envKobol:envKobol
 	};
-	instKomet.start.call(instKomet, args);
+	instKobol.start.call(instKobol, args);
 };
 
 /**
- * @param {Object} inst - Instance of komet.
+ * @param {Object} inst - Instance of kobol.
  */
 let loadEvents = (inst): void => {
 	inst.on("finish_task", (e) => {
@@ -75,6 +75,6 @@ let loadEvents = (inst): void => {
  */
 cli.launch({
 	cwd: argv.cwd,
-	configPath: argv.kometfile,
+	configPath: argv.kobolfile,
 	require: argv.require
 }, callback);

@@ -1,4 +1,4 @@
-import { Komet } from './komet.js';
+import { kobol } from './kobol';
 
-let inst = new Komet();
+let inst = new kobol();
 export = inst;

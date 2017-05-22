@@ -1,52 +1,52 @@
-var komet = require('komet');
+var kobol = require('kobol');
 
-komet.task({
+kobol.task({
 	alias:"css",
 	entry:"./tasks/css.js",
 	sequential:["sprite", "babel-c"]
 });
 
-komet.task({
+kobol.task({
 	alias:"server",
 	entry:"./server/index.js",
 });
 
-komet.task({
+kobol.task({
 	alias:"sprite",
 	entry:"./tasks/sprite.js"
 });
 
-komet.task({
+kobol.task({
 	alias:"fonts",
 	entry:"./tasks/fonts.js"
 });
 
-komet.task({
+kobol.task({
 	alias:"pug",
 	entry:"./tasks/pug.js"
 });
 
-komet.task({
+kobol.task({
 	alias:"static-s",
 	sequential:["pug", "css", "sprite", "babel"]
 });
 
-komet.task({
+kobol.task({
 	alias:"static-p",
 	parallel:["pug", "css", "sprite", "babel"]
 });
 
-komet.task({
+kobol.task({
 	alias:'babel-c',
     command: "babel ./src -d ./lib",
     sequential:["sprite"]
 });
 
-komet.task({
+kobol.task({
 	alias:'babel',
     command: "babel -w ./src -d ./lib"
 });
 
-komet.task({
+kobol.task({
 	alias:'nada'
 });

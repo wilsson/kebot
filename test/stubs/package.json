@@ -2,12 +2,12 @@
   "name": "stubs",
   "version": "1.0.0",
   "description": "",
-  "main": "kometfile.js",
+  "main": "kobolfile.js",
   "devDependencies": {
     "autoprefixer": "^6.7.7",
     "babel-cli": "^6.24.0",
     "express": "^4.15.2",
-    "komet": "file:///D:\\komet",
+    "kobol": "file:///D:\\komet",
     "postcss": "^5.2.16"
   },
   "scripts": {

@@ -1,10 +1,10 @@
 {
-  "name": "komet",
+  "name": "kobol",
   "version": "0.0.1",
   "description": "",
   "main": "lib/index.js",
   "bin": {
-    "komet": "./bin/komet.js"
+    "kobol": "./bin/kobol.js"
   },
   "directories": {
     "test": "test"
@@ -16,14 +16,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/wilsson/komet.git"
+    "url": "git+https://github.com/wilsson/kobol.git"
   },
   "author": "wilsson <wilsonft83@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/wilsson/komet/issues"
+    "url": "https://github.com/wilsson/kobol/issues"
   },
-  "homepage": "https://github.com/wilsson/komet#readme",
+  "homepage": "https://github.com/wilsson/kobol#readme",
   "devDependencies": {
     "@types/node": "^7.0.18",
     "esdoc": "^0.5.2",
