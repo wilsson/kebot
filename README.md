@@ -1,17 +1,17 @@
-## What is komet?
-Komet is a tool that will help you manage your development scripts as well as locally installed CLI.
+## What is kobol?
+kobol is a tool that will help you manage your development scripts as well as locally installed CLI.
 ## Documentation
-For an introduction to our API and more read our [wiki](https://github.com/wilsson/komet/wiki)!
-## Sample `kometfile.js`
+For an introduction to our API and more read our [wiki](https://github.com/wilsson/kobol/wiki)!
+## Sample `kobolfile.js`
 ```js
-// kometfile.js
-var komet = require("komet");
-komet.task({
+// kobolfile.js
+var kobol = require("kobol");
+kobol.task({
   alias:"css",
   entry:"./task-css.js"
 });
 ```
 Then run
 ```bash
-komet css
+kobol css
 ```

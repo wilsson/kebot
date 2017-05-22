@@ -7,7 +7,7 @@
     "autoprefixer": "^6.7.7",
     "babel-cli": "^6.24.0",
     "express": "^4.15.2",
-    "kobol": "file:///D:\\komet",
+    "kobol": "file:///D:\\kobol",
     "postcss": "^5.2.16"
   },
   "scripts": {

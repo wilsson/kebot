@@ -54,6 +54,7 @@ export function execute(param): void{
 	}
 }
 /**
+ * @desc Run the path of your node script.
  * @param {object} param
  */
  export function executeEntry(param): void{
@@ -80,10 +81,11 @@ export function execute(param): void{
  }
 
 /**
+ * @desc Execute command CLI installed locally.
  * @param {object} param
  */
 export function executeCommand(param): void{
-	let { task, that, task : { command: cmd }}  = param;
+	let {that, task, task : { command: cmd }, tasksRun, callback}  = param;
 	let chunksCommand: string[] = cmd.split(/\s/);
 	let [command, ...args] = chunksCommand;
 	command = getCommandForPlatform(command);
@@ -95,10 +97,13 @@ export function executeCommand(param): void{
 		let args = getArgsStout(task);
 		process.stdout.write(`${data}`);
 		that.emit("finish_task", args);
+		if(callback && typeof callback === "function"){
+			callback(tasksRun);
+		}
 	});
 
 	cp.stderr.on('data', (data) => {
-		console.log(`Error in task ${task.alias}`);
+		that.emit("task_error", task.alias);
 		process.stdout.write(`${data}`);
 	});
 }

@@ -1,3 +1,1 @@
-"use strict";
-
-var foo = 3242;
+let foo = 3242;
