@@ -94,12 +94,20 @@ export function executeCommand(param): void{
 	let pathAbsolute: string = path.resolve(`./node_modules/.bin/${command}`);
 	let start = process.hrtime();
 	let cp = spawn(pathAbsolute, args);
-	
+	let status: boolean = true;
+	let _args;
 	cp.stdout.on('data', (data) => {
 		let end = process.hrtime(start);
-		let args = getArgsStout(task, end);
+		if(status){
+			_args = getArgsStout(task, end);
+			status = false;
+		}else{
+			_args = {
+				task:task.alias
+			};
+		}
 		process.stdout.write(`${data}`);
-		that.emit("finish_task", args);
+		that.emit("finish_task", _args);
 		if(callback && typeof callback === "function"){
 			callback(tasksRun);
 		}

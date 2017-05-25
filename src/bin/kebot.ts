@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+
 import * as interpret from "interpret";
 import * as Liftoff from "liftoff";
 import * as util from "../lib/util";
@@ -35,11 +36,11 @@ let callback = (env): void =>{
 		process.exit(1);
 	}
 	if (!modulePath) {
-		util.log("Local kobot not found");
+		util.log("Local kebot not found");
 		process.exit(1);
 	}
 	if (!configPath) {
-		util.log("No kobotfile found");
+		util.log("No kebotfile found");
 		process.exit(1);
 	}
 	require(configPath);
