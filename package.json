@@ -1,6 +1,6 @@
 {
   "name": "kebot",
-  "version": "0.0.4",
+  "version": "0.0.6",
   "description": "Executor of scripts and commands",
   "main": "lib/index.js",
   "bin": {
