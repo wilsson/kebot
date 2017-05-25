@@ -1,4 +1,4 @@
-import { kobol } from './kobol';
+import { Kebot } from './kebot';
 
-let inst = new kobol();
+let inst = new Kebot();
 export = inst;

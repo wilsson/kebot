@@ -6,13 +6,13 @@ var Liftoff = require("liftoff");
 var util = require("../lib/util");
 var argv = require('minimist')(process.argv.slice(2));
 var argTask = String(argv._[0]);
-var envKobol = argv.env;
+var envKebot = argv.env;
 var option = argv.a || false;
 /**
  * @desc Instance of Liftoff.
  */
 var cli = new Liftoff({
-    name: 'kobol',
+    name: 'kebot',
     extensions: interpret.jsVariants
 });
 var argVersion = argv.v || argv.version;
@@ -23,7 +23,7 @@ var versionCli = require("../package.json").version;
  */
 var callback = function (env) {
     var modulePackage = env.modulePackage, modulePath = env.modulePath, configPath = env.configPath;
-    var instKobol;
+    var instKebot;
     var args;
     if (argVersion && !argv._.length) {
         util.log("CLI version " + versionCli);
@@ -33,29 +33,29 @@ var callback = function (env) {
         process.exit(1);
     }
     if (!modulePath) {
-        util.log("Local kobol not found");
+        util.log("Local kobot not found");
         process.exit(1);
     }
     if (!configPath) {
-        util.log("No kobolfile found");
+        util.log("No kobotfile found");
         process.exit(1);
     }
     require(configPath);
-    instKobol = require(modulePath);
-    loadEvents(instKobol);
+    instKebot = require(modulePath);
+    loadEvents(instKebot);
     args = {
         argTask: argTask,
         option: option,
-        envKobol: envKobol
+        envKebot: envKebot
     };
-    instKobol.start.call(instKobol, args);
+    instKebot.start.call(instKebot, args);
 };
 /**
- * @param {Object} inst - Instance of kobol.
+ * @param {Object} inst - Instance of kebot.
  */
 var loadEvents = function (inst) {
     inst.on("finish_task", function (e) {
-        util.log("Finish task " + e.task);
+        util.log("Finish task " + e.task, e.time);
     });
     inst.on("task_not_found", function (e) {
         util.error("Task " + e + " not found");
@@ -69,6 +69,6 @@ var loadEvents = function (inst) {
  */
 cli.launch({
     cwd: argv.cwd,
-    configPath: argv.kobolfile,
+    configPath: argv.kebotfile,
     require: argv.require
 }, callback);

@@ -1,24 +1,24 @@
-## What is kobol?
+## What is kebot?
 
-kobol is a tool that will help you manage your development scripts as well as locally installed CLI.
+Kebot is a tool that will help you manage your development scripts as well as locally installed CLI.
 
 ## Documentation
 
-For an introduction to our API and more read our [wiki](https://github.com/wilsson/kobol/wiki)!
+For an introduction to our API and more read our [wiki](https://github.com/wilsson/kebot/wiki)!
 
-## Sample `kobolfile.js`
+## Sample `kebotfile.js`
 
 ```js
-// kobolfile.js
-var kobol = require("kobol");
-kobol.task({
+// kebotfile.js
+var kebot = require("kebot");
+kebot.task({
   alias:"css",
   entry:"./task-css.js"
 });
 ```
 
-Then run
+Then run and see the magic
 
 ```bash
-kobol css
+kebot css
 ```

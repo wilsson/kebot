@@ -60,8 +60,10 @@ export function execute(param): void{
  export function executeEntry(param): void{
 	let { that, task, tasksRun, callback } = param;
 	let cp = spawn(process.execPath, [task.entry]);
+	let start = process.hrtime();
 	cp.stdout.on("data", (data) => {
-		let args = getArgsStout(task);
+		let end = process.hrtime(start);
+		let args = getArgsStout(task, end);
 		if(data){
 			process.stdout.write(`${data}`);
 		}
@@ -94,7 +96,8 @@ export function executeCommand(param): void{
 	let cp = spawn(pathAbsolute, args);
 	
 	cp.stdout.on('data', (data) => {
-		let args = getArgsStout(task);
+		let end = process.hrtime(start);
+		let args = getArgsStout(task, end);
 		process.stdout.write(`${data}`);
 		that.emit("finish_task", args);
 		if(callback && typeof callback === "function"){
@@ -111,9 +114,9 @@ export function executeCommand(param): void{
 /**
  * @param {object} param
  */
-function getArgsStout(task){
+function getArgsStout(task, end){
 	let args = <any>{};
-	//args.time = prettyHrtime(end, {precise:true});
+	args.time = prettyHrtime(end);
 	args.task = task.alias;
 	return args;
  }

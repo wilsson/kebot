@@ -1,52 +1,52 @@
-var kobol = require('kobol');
+var kebot = require('kebot');
 
-kobol.task({
+kebot.task({
 	alias:"css",
 	entry:"./tasks/css.js",
 	sequential:["sprite", "babel-c"]
 });
 
-kobol.task({
+kebot.task({
 	alias:"server",
 	entry:"./server/index.js",
 });
 
-kobol.task({
+kebot.task({
 	alias:"sprite",
 	entry:"./tasks/sprite.js"
 });
 
-kobol.task({
+kebot.task({
 	alias:"fonts",
 	entry:"./tasks/fonts.js"
 });
 
-kobol.task({
+kebot.task({
 	alias:"pug",
 	entry:"./tasks/pug.js"
 });
 
-kobol.task({
+kebot.task({
 	alias:"static-s",
 	sequential:["pug", "css", "sprite", "babel"]
 });
 
-kobol.task({
+kebot.task({
 	alias:"static-p",
 	parallel:["pug", "css", "sprite", "babel"]
 });
 
-kobol.task({
+kebot.task({
 	alias:'babel-c',
     command: "babel ./src -d ./lib",
     sequential:["sprite"]
 });
 
-kobol.task({
+kebot.task({
 	alias:'babel',
     command: "babel -w ./src -d ./lib"
 });
 
-kobol.task({
+kebot.task({
 	alias:'nada'
 });

@@ -1,10 +1,10 @@
 {
-  "name": "kobol",
+  "name": "kebot",
   "version": "0.0.2",
   "description": "Executor of scripts and commands",
   "main": "lib/index.js",
   "bin": {
-    "kobol": "./bin/kobol.js"
+    "kebot": "./bin/kebot.js"
   },
   "directories": {
     "test": "test"
@@ -16,14 +16,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/wilsson/kobol.git"
+    "url": "git+https://github.com/wilsson/kebot.git"
   },
   "author": "wilsson <wilsonft83@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/wilsson/kobol/issues"
+    "url": "https://github.com/wilsson/kebot/issues"
   },
-  "homepage": "https://github.com/wilsson/kobol#readme",
+  "homepage": "https://github.com/wilsson/kebot#readme",
   "devDependencies": {
     "@types/node": "^7.0.18",
     "esdoc": "^0.5.2",

@@ -2,9 +2,9 @@
  * @author Wilson Flores <wilsonft83@gmail.com>
  * @since 0.0.1
  * @example
- * var kobol = require("kobol");
+ * var kebot = require("kebot");
  *
- * kobol.task({
+ * kebot.task({
  *  alias:'task-one',
  *  entry:'task-one.js'
  * });
@@ -28,7 +28,7 @@ interface Task{
 	parallel:string[]
 }
 
-export class kobol extends EventEmitter{
+export class Kebot extends EventEmitter{
 	/**
      * @type {Object}
 	 * @desc Method for validate task.
@@ -86,10 +86,10 @@ export class kobol extends EventEmitter{
 	 * @desc Method for creating a task.
 	 * @param {string} params.argTask - Command to execute.
 	 * @param {string} params.option - Task dependencies sequential.
-	 * @param {string} params.envKobol - Task dependencies parallel.
+	 * @param {string} params.envKebot - Task dependencies parallel.
 	 */
 	start(params): void{
-		let { argTask, option, envKobol } = params;
+		let { argTask, option, envKebot } = params;
 		let foundTask: Task;
 		let type: string;
 		if(typeof undefined === argTask){
@@ -101,7 +101,7 @@ export class kobol extends EventEmitter{
 			}
 		}
 		if(foundTask){
-			this.createEnv(envKobol);
+			this.createEnv(envKebot);
 			type = this.verifyTypeTask(foundTask);
 			switch(type){
 				case TYPE.TASK:
