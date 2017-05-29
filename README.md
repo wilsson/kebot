@@ -1,5 +1,6 @@
 [![npm version](https://badge.fury.io/js/kebot.svg)](https://badge.fury.io/js/kebot)
 [![Build Status](https://travis-ci.org/wilsson/kebot.svg?branch=master)](https://travis-ci.org/wilsson/kebot)
+[![Coverage Status](https://coveralls.io/repos/github/wilsson/kebot/badge.svg?branch=master)](https://coveralls.io/github/wilsson/kebot?branch=master)
 
 ## What is kebot?
 
