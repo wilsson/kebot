@@ -25,7 +25,8 @@ interface Task{
 	command:string,
 	entry:string,
 	sequential:string[],
-	parallel:string[]
+	parallel:string[],
+	local:boolean
 }
 
 export class Kebot extends EventEmitter{
@@ -44,7 +45,14 @@ export class Kebot extends EventEmitter{
 	 * @param {Object} config - Task configuration object.
 	 */
 	validateTask(config: Task){
-		let { alias, entry, sequential, parallel, command } = config;
+		let { 
+			alias, 
+			entry, 
+			sequential, 
+			parallel, 
+			command, 
+			local 
+		} = config;
 		let task = {};
 		validate.execute('string', alias);
 		validate.execute('string', entry);
@@ -63,7 +71,7 @@ export class Kebot extends EventEmitter{
 				validate.execute('string', dependence);
 			}
 		}
-		
+		config.local = config.hasOwnProperty("local") ? local : true;
 		task[alias] = config;
 		return task;
 	}

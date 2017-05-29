@@ -15,5 +15,9 @@ fs.readFile('src/css/index.css', function(err, css){
 if (process.env.production){
 	console.log("process.env.production>", process.env.production);
 };
-
-console.log("My task css")
+console.log("task css 1");
+console.log("task css 2");
+console.log("task css 3");
+console.log("task css 4");
+console.log("task css 5");
+console.log("task css 6");

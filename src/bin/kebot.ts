@@ -25,7 +25,11 @@ let versionCli: string = require("../package.json").version;
  * @param {Object} env - Instance of Liftoff.
  */
 let callback = (env): void =>{
-	let { modulePackage, modulePath, configPath } = env;
+	let { 
+		modulePackage, 
+		modulePath, 
+		configPath 
+	} = env;
 	let instKebot;
 	let args;
 	if(argVersion && !argv._.length){
@@ -33,15 +37,15 @@ let callback = (env): void =>{
 		if(modulePackage && typeof modulePackage.version !== "undefined"){
 			util.log(`Local version ${modulePackage.version}`);
 		}
-		process.exit(1);
+		process.exit();
 	}
 	if (!modulePath) {
 		util.log("Local kebot not found");
-		process.exit(1);
+		process.exit();
 	}
 	if (!configPath) {
 		util.log("No kebotfile found");
-		process.exit(1);
+		process.exit();
 	}
 	require(configPath);
 	instKebot = require(modulePath);
@@ -58,10 +62,6 @@ let callback = (env): void =>{
  * @param {Object} inst - Instance of kebot.
  */
 let loadEvents = (inst): void => {
-	inst.on("finish_task", (e) => {
-		util.log(`Finish task ${e.task}`, e.time);
-	});
-
 	inst.on("task_not_found", (e) => {
 		util.error(`Task ${e} not found`);
 	});

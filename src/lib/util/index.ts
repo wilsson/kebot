@@ -1,4 +1,3 @@
-import * as prettyHrtime from "pretty-hrtime";
 import * as chalk from "chalk";
 import * as timestamp from "time-stamp";
 import * as fs from "fs";
@@ -42,91 +41,48 @@ export function shiftObject(object){
 }
 
 /**
- * @param {object} param
- */
-export function execute(param): void{
-	let { task: { entry: entry, command: command} } = param;
-	if(entry){
-		executeEntry(param)
-	}
-	if(command){
-		executeCommand(param);
-	}
-}
-/**
  * @desc Run the path of your node script.
  * @param {object} param
  */
- export function executeEntry(param): void{
-	let { that, task, tasksRun, callback } = param;
-	let cp = spawn(process.execPath, [task.entry]);
-	let start = process.hrtime();
+ export function execute(param): void{
+	let { 
+		that, 
+		task:{
+			command: cmd,
+			entry: entry,
+			local: local,
+			alias:alias
+		}, 
+		tasksRun, 
+		callback
+	} = param;
+
+	let execPath: string;
+	let spawnArgs: string[];
+
+	if(entry){
+		execPath = process.execPath;
+		spawnArgs = [entry]
+	}
+	if(cmd){
+		let chunksCommand: string[] = cmd.split(/\s/);
+		let [command, ...args] = chunksCommand;
+		command = getCommandForPlatform(command);
+		execPath = local ? path.resolve(`./node_modules/.bin/${command}`) : command;
+		spawnArgs = args;
+	}
+	let cp = spawn(execPath, spawnArgs);
 	cp.stdout.on("data", (data) => {
-		let end = process.hrtime(start);
-		let args = getArgsStout(task, end);
-		if(data){
-			process.stdout.write(`${data}`);
-		}
-		that.emit("finish_task", args);
+		process.stdout.write(`${data}`);
 		if(callback && typeof callback === "function"){
 			callback(tasksRun);
 		}
 	});
 
 	cp.stderr.on('data', (data) => {
-		if(data){
-			that.emit("task_error", task.alias);
-			process.stdout.write(`${data}`);
-			return;
-		}
-	});
- }
-
-/**
- * @desc Execute command CLI installed locally.
- * @param {object} param
- */
-export function executeCommand(param): void{
-	let {that, task, task : { command: cmd }, tasksRun, callback}  = param;
-	let chunksCommand: string[] = cmd.split(/\s/);
-	let [command, ...args] = chunksCommand;
-	command = getCommandForPlatform(command);
-	let pathAbsolute: string = path.resolve(`./node_modules/.bin/${command}`);
-	let start = process.hrtime();
-	let cp = spawn(pathAbsolute, args);
-	let status: boolean = true;
-	let _args;
-	cp.stdout.on('data', (data) => {
-		let end = process.hrtime(start);
-		if(status){
-			_args = getArgsStout(task, end);
-			status = false;
-		}else{
-			_args = {
-				task:task.alias
-			};
-		}
-		process.stdout.write(`${data}`);
-		that.emit("finish_task", _args);
-		if(callback && typeof callback === "function"){
-			callback(tasksRun);
-		}
-	});
-
-	cp.stderr.on('data', (data) => {
-		that.emit("task_error", task.alias);
+		that.emit("task_error", alias);
 		process.stdout.write(`${data}`);
 	});
-}
-
-/**
- * @param {object} param
- */
-function getArgsStout(task, end){
-	let args = <any>{};
-	args.time = prettyHrtime(end);
-	args.task = task.alias;
-	return args;
  }
 
 /**

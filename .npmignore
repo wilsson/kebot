@@ -4,3 +4,4 @@ tsconfig.json
 yarn.lock
 .editorconfig
 .esdoc.json
+.travis.yml

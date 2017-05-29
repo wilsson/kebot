@@ -1,3 +1,5 @@
+[![npm version](https://badge.fury.io/js/kebot.svg)](https://badge.fury.io/js/kebot)
+
 ## What is kebot?
 
 Kebot is a tool that will help you manage your development scripts as well as locally installed CLI.

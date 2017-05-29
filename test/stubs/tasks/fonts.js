@@ -1,3 +1,1 @@
-setTimeout(function(){
-    console.log("My task fonts");
-}, 3000);
+console.log("My task fonts");
