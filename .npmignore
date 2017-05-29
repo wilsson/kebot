@@ -5,3 +5,4 @@ yarn.lock
 .editorconfig
 .esdoc.json
 .travis.yml
+.coveralls.yml
