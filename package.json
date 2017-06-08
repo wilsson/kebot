@@ -1,10 +1,10 @@
 {
   "name": "kebot",
-  "version": "0.0.7",
+  "version": "0.0.9",
   "description": "Executor of scripts and commands",
-  "main": "lib/index.js",
+  "main": "./lib/index.js",
   "bin": {
-    "kebot": "./bin/kebot.js"
+    "kb": "./bin/kebot.js"
   },
   "directories": {
     "test": "test"

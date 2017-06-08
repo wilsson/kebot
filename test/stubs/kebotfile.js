@@ -24,15 +24,17 @@ kebot.task({
 kebot.task({
 	alias:"command",
 	command:"gulp --version",
-	local:false
+	local:true
 });
 
 kebot.task({
 	alias:"babel",
-	command: "babel -w ./src -d ./lib"
+	command: "babel -w ./src -d ./lib",
+	local:true
 });
 
 kebot.task({
 	alias:'babel-c',
-    command: "babel ./src -d ./lib"
+    command: "babel ./src -d ./lib",
+	local:true
 });

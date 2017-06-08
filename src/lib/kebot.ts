@@ -71,7 +71,7 @@ export class Kebot extends EventEmitter{
 				validate.execute('string', dependence);
 			}
 		}
-		config.local = config.hasOwnProperty("local") ? local : true;
+		config.local = config.hasOwnProperty("local") ? local : false;
 		task[alias] = config;
 		return task;
 	}
