@@ -3,7 +3,7 @@ var kebot = require('kebot');
 kebot.task({
 	alias:"css",
 	entry:"./tasks/css.js",
-	sequential:["pug", "sprite", "fonts", "babel-c"]
+	sequential:["pug", "sprite"]
 });
 
 kebot.task({
@@ -13,7 +13,9 @@ kebot.task({
 
 kebot.task({
 	alias:"pug",
-	entry:"./tasks/pug.js"
+	//entry:"./tasks/pug.js",
+	command:"babel -w ./src -d ./lib",
+	local:true
 });
 
 kebot.task({
@@ -23,8 +25,7 @@ kebot.task({
 
 kebot.task({
 	alias:"command",
-	command:"gulp --version",
-	local:true
+	command:"yarn add runjs -g"
 });
 
 kebot.task({

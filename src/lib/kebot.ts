@@ -97,7 +97,7 @@ export class Kebot extends EventEmitter{
 	 * @param {string} params.envKebot - Task dependencies parallel.
 	 */
 	start(params): void{
-		let { argTask, option, envKebot } = params;
+		let { argTask, option, envKebot, argsKomet } = params;
 		let foundTask: Task;
 		let type: string;
 		if(typeof undefined === argTask){
@@ -110,6 +110,7 @@ export class Kebot extends EventEmitter{
 		}
 		if(foundTask){
 			this.createEnv(envKebot);
+			this.createArgs(argsKomet);
 			type = this.verifyTypeTask(foundTask);
 			switch(type){
 				case TYPE.TASK:
@@ -121,6 +122,15 @@ export class Kebot extends EventEmitter{
 			}
 		}else{
 			this.emit('task_not_found', argTask);
+		}
+	}
+	/**
+	 * @desc Creates args variable.
+	 * @param {string} args
+	 */
+	createArgs(args: string): void{
+		if(args){
+			process.env.args = args;
 		}
 	}
 
@@ -262,20 +272,10 @@ export class Kebot extends EventEmitter{
 	 * @param {object} tasksRun - All configurations to run.
 	 */
 	runDependenciesSequential(tasksRun): void{
-		let task: Task;
-		let params;
-		let runRecursive = (tasksRun) => {
-			if(Object.keys(tasksRun).length){
-				task = _.shiftObject(tasksRun);
-				params = {
-					that:this,
-					task:task,
-					tasksRun:tasksRun,
-					callback:runRecursive
-				};
-				_.execute(params);
-			}
-		};
-		runRecursive(tasksRun);
+		let task:Task;
+		for(let key in tasksRun){
+			task = tasksRun[key];
+			_.executeSync(task);
+		}
 	}
 }

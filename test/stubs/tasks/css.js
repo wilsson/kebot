@@ -19,5 +19,5 @@ console.log("task css 1");
 console.log("task css 2");
 console.log("task css 3");
 console.log("task css 4");
-console.log("task css 5");
-console.log("task css 6");
+console.log("task css 5", process.env.pro);
+console.log("task css 6", process.env.args);

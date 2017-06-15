@@ -3,6 +3,7 @@ import * as timestamp from "time-stamp";
 import * as fs from "fs";
 import * as path from "path";
 import { exec } from "child_process";
+import { execSync } from "child_process";
 import { spawn } from "child_process";
 
 /**
@@ -40,6 +41,37 @@ export function shiftObject(object){
 	return firstObject;
 }
 
+export function executeSync(param){
+	let options = {
+		stdio: "inherit"
+	};
+
+	let {
+		command: cmd,
+		entry: entry,
+		local: local,
+		alias:alias
+	} = param;
+
+	let execPath: string;
+	let execArgs: string;
+	if(entry){
+		execPath = process.execPath;
+		execArgs = entry
+	}
+	if(cmd){
+		let chunksCommand: string[] = cmd.split(/\s/);
+		let [command, ...args] = chunksCommand;
+		command = getCommandForPlatform(command);
+		execPath = local ? path.resolve(`./node_modules/.bin/${command}`) : command;
+		execArgs = args.join(" ");
+	}
+	var buffer = execSync(`${execPath} ${execArgs}`, options);
+	if(buffer){
+		process.stdout.write(buffer.toString());
+	}
+}
+
 /**
  * @desc Run the path of your node script.
  * @param {object} param
@@ -58,20 +90,20 @@ export function shiftObject(object){
 	} = param;
 
 	let execPath: string;
-	let spawnArgs: string[];
+	let execArgs: string;
 
 	if(entry){
 		execPath = process.execPath;
-		spawnArgs = [entry]
+		execArgs = entry
 	}
 	if(cmd){
 		let chunksCommand: string[] = cmd.split(/\s/);
 		let [command, ...args] = chunksCommand;
 		command = getCommandForPlatform(command);
 		execPath = local ? path.resolve(`./node_modules/.bin/${command}`) : command;
-		spawnArgs = args;
+		execArgs = args.join(" ");
 	}
-	let cp = spawn(execPath, spawnArgs);
+	let cp = exec(`${execPath} ${execArgs}`);
 	cp.stdout.on("data", (data) => {
 		process.stdout.write(`${data}`);
 		if(callback && typeof callback === "function"){

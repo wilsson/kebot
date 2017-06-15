@@ -7,6 +7,7 @@ import * as util from "../lib/util";
 let argv = require('minimist')(process.argv.slice(2));
 let argTask: string = String(argv._[0]);
 let envKebot: string = argv.env;
+let argsKomet: string = argv.args;
 let option: boolean = argv.a || false;
 
 /**
@@ -51,6 +52,7 @@ let callback = (env): void =>{
 	instKebot = require(modulePath);
 	loadEvents(instKebot);
 	args = {
+		argsKomet:argsKomet,
 		argTask:argTask,
 		option:option,
 		envKebot:envKebot
