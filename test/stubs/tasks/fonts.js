@@ -1,1 +1,1 @@
-console.log("My task fonts");
+console.log("My task fonts", process.env.foo);

@@ -97,7 +97,7 @@ export class Kebot extends EventEmitter{
 	 * @param {string} params.envKebot - Task dependencies parallel.
 	 */
 	start(params): void{
-		let { argTask, option, envKebot } = params;
+		let { argTask, option, envKebot, argsKomet } = params;
 		let foundTask: Task;
 		let type: string;
 		if(typeof undefined === argTask){
@@ -110,6 +110,7 @@ export class Kebot extends EventEmitter{
 		}
 		if(foundTask){
 			this.createEnv(envKebot);
+			this.createArgs(argsKomet);
 			type = this.verifyTypeTask(foundTask);
 			switch(type){
 				case TYPE.TASK:
@@ -123,6 +124,16 @@ export class Kebot extends EventEmitter{
 			this.emit('task_not_found', argTask);
 		}
 	}
+	
+	/**
+	 * @desc Creates args variable.
+	 * @param {string} args
+	 */
+	createArgs(args: string): void{
+		if(args){
+			process.env.args = args;
+		}
+	}
 
 	/**
 	 * @desc Creates an environment variable.
@@ -130,7 +141,7 @@ export class Kebot extends EventEmitter{
 	 */
 	createEnv(env: string): void{
 		if(env){
-			process.env[env] = env;
+			process.env[env] = true;
 		}
 	}
 
@@ -158,7 +169,7 @@ export class Kebot extends EventEmitter{
 
 		if (type === TYPE.TASKS) {
 			if(!sequential && !parallel){
-				process.exit(1);
+				process.exit();
 			}
 		}
 		return type;
@@ -170,17 +181,14 @@ export class Kebot extends EventEmitter{
 	 */
 	initTask(task: Task, option: boolean): void{
 		let { sequential, parallel } = task;
-		let param = {
-			that:this,
-			task:task
-		};
+
 		if (parallel && option) {
 			throw new Error("You can only have sequential dependency tasks");
 		}
 		if (sequential && option) {
 			this.dependenciesTask(task);
 		}else{
-			_.execute(param);
+			_.execute(task, "sync");
 		}
 	}
 
@@ -195,25 +203,24 @@ export class Kebot extends EventEmitter{
 		if (tasksRun) {
 			switch(type){
 				case TYPE.SEQUENTIAL:
-					this.runDependenciesSequential(tasksRun);
+					this.executeTasks(tasksRun, "sync")
 					break;
 				case TYPE.PARALLEL:
-					this.runDependenciesParallel(tasksRun);
+					this.executeTasks(tasksRun, "async")
 					break;
 			}
 		}
 	}
 
 	/**
-	 * @param {object} tasksRun - tasksRun object dependencies.
+	 * @param {object} tasks - Tasks to execute.
+	 * @param {string} type -  Type of task execution.
 	 */
-	runDependenciesParallel(tasksRun): void{
-		for(let task in tasksRun){
-			let params = {
-				that:this,
-				task:tasksRun[task]
-			};
-			_.execute(params);
+	executeTasks(tasks, type){
+		let task: Task;
+		for(let task in tasks){
+			task = tasks[task]
+			_.execute(task, type);
 		}
 	}
 
@@ -239,7 +246,7 @@ export class Kebot extends EventEmitter{
 		let { sequential, alias } = task;
 		let tasksRun = this.getDependsTasks(sequential);
 		tasksRun[alias] = task;
-		this.runDependenciesSequential(tasksRun);
+		this.executeTasks(tasksRun, "sync");
 	}
 
 	/**
@@ -257,25 +264,4 @@ export class Kebot extends EventEmitter{
 		}
 		return tasksRun;
 	 }
-
-	/**
-	 * @param {object} tasksRun - All configurations to run.
-	 */
-	runDependenciesSequential(tasksRun): void{
-		let task: Task;
-		let params;
-		let runRecursive = (tasksRun) => {
-			if(Object.keys(tasksRun).length){
-				task = _.shiftObject(tasksRun);
-				params = {
-					that:this,
-					task:task,
-					tasksRun:tasksRun,
-					callback:runRecursive
-				};
-				_.execute(params);
-			}
-		};
-		runRecursive(tasksRun);
-	}
 }

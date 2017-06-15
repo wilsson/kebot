@@ -3,7 +3,7 @@ var kebot = require('kebot');
 kebot.task({
 	alias:"css",
 	entry:"./tasks/css.js",
-	sequential:["pug", "sprite", "fonts", "babel-c"]
+	sequential:["pug", "fonts"]
 });
 
 kebot.task({
@@ -17,24 +17,23 @@ kebot.task({
 });
 
 kebot.task({
-	alias:"sprite",
-	entry:"./tasks/sprite.js"
+	alias:"add",
+	command:"npm install lodash -g"
 });
 
 kebot.task({
-	alias:"command",
-	command:"gulp --version",
-	local:true
+	alias:"static",
+	parallel:["babel", "babel2"]
 });
 
 kebot.task({
 	alias:"babel",
-	command: "babel -w ./src -d ./lib",
+	command:"babel -w ./src/lib -d ./lib",
 	local:true
 });
 
 kebot.task({
-	alias:'babel-c',
-    command: "babel ./src -d ./lib",
+	alias:"babel2",
+	command:"babel -w ./src/bin -d ./lib",
 	local:true
 });

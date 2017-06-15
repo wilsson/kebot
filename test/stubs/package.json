@@ -5,14 +5,18 @@
   "main": "kobolfile.js",
   "devDependencies": {
     "autoprefixer": "^6.7.7",
-    "babel-cli": "^6.24.0",
+    "babel-cli": "^6.24.1",
     "express": "^4.15.2",
-    "kebot": "file:../..",
+    "kebot": "file:///D:\\kebot",
     "postcss": "^5.2.16"
   },
   "scripts": {
-    "build": "kebot css"
+    "build": "babel -w ./src/bin -d ./lib"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "lodash": "^4.17.4",
+    "runjs": "^3.4.1"
+  }
 }

@@ -7,6 +7,7 @@ var util = require("../lib/util");
 var argv = require('minimist')(process.argv.slice(2));
 var argTask = String(argv._[0]);
 var envKebot = argv.env;
+var argsKomet = argv.args;
 var option = argv.a || false;
 /**
  * @desc Instance of Liftoff.
@@ -44,6 +45,7 @@ var callback = function (env) {
     instKebot = require(modulePath);
     loadEvents(instKebot);
     args = {
+        argsKomet: argsKomet,
         argTask: argTask,
         option: option,
         envKebot: envKebot
@@ -56,9 +58,6 @@ var callback = function (env) {
 var loadEvents = function (inst) {
     inst.on("task_not_found", function (e) {
         util.error("Task " + e + " not found");
-    });
-    inst.on("task_error", function (e) {
-        util.error("Error in task " + e);
     });
 };
 /**

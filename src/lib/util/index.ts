@@ -2,11 +2,11 @@ import * as chalk from "chalk";
 import * as timestamp from "time-stamp";
 import * as fs from "fs";
 import * as path from "path";
-import { exec } from "child_process";
+import { execSync } from "child_process";
 import { spawn } from "child_process";
 
 /**
- * @desc log error for task
+ * @desc Log error for task
  * @param {string} param - String for log error.
  */
 export function error(param: string): void{
@@ -17,7 +17,9 @@ export function error(param: string): void{
 };
 
 /**
- * @desc log for task
+ * @desc Log for task
+ * @param {string} param - Text for log.
+ * @param {string} time - The time.
  */
 export function log(param: string, time?: string): void{
 	let output: string = "";
@@ -31,65 +33,73 @@ export function log(param: string, time?: string): void{
 }
 
 /**
- * @param {object} object - Object to treat.
+ * @desc Execute task
+ * @param {object} task - Config Task.
+ * @param {string} type - Type task sequential or parallel.
  */
-export function shiftObject(object){
-	let key: string = Object.keys(object)[0];
-	let firstObject = object[key];
-	delete object[key];
-	return firstObject;
+export function execute(task, type: string){
+	let execArgs : string;
+	let command : string;
+	let args: string[];
+	let outputCommand: string;
+
+	let options = {
+		stdio: "inherit",
+		shell: true
+	};
+
+	let {
+		command: cmd,
+		entry: entry,
+		local: local,
+		alias:alias
+	} = task;
+	
+
+	if(entry){
+		command = `node ${entry}`;
+		outputCommand = entry;
+	}
+	if(cmd){
+		outputCommand = cmd;
+		let chunksCommand: string[] = cmd.split(/\s/);
+		[command, ...args] = chunksCommand;
+		command = local ? getBinCommand(command, args) : command;
+		command = `${command} ${args.join(" ")}`;
+	}
+	console.log(chalk.bold(`Executing ${outputCommand}`));
+	if(type === "sync"){
+		return executeSync(command, options);
+	}
+	return executeASync(command, options);
 }
 
 /**
- * @desc Run the path of your node script.
- * @param {object} param
+ * @desc Execute task sequential
+ * @param {string} command - Command execute.
+ * @param {object} options - Options process.
  */
- export function execute(param): void{
-	let { 
-		that, 
-		task:{
-			command: cmd,
-			entry: entry,
-			local: local,
-			alias:alias
-		}, 
-		tasksRun, 
-		callback
-	} = param;
-
-	let execPath: string;
-	let spawnArgs: string[];
-
-	if(entry){
-		execPath = process.execPath;
-		spawnArgs = [entry]
-	}
-	if(cmd){
-		let chunksCommand: string[] = cmd.split(/\s/);
-		let [command, ...args] = chunksCommand;
-		command = getCommandForPlatform(command);
-		execPath = local ? path.resolve(`./node_modules/.bin/${command}`) : command;
-		spawnArgs = args;
-	}
-	let cp = spawn(execPath, spawnArgs);
-	cp.stdout.on("data", (data) => {
-		process.stdout.write(`${data}`);
-		if(callback && typeof callback === "function"){
-			callback(tasksRun);
-		}
-	});
-
-	cp.stderr.on('data', (data) => {
-		that.emit("task_error", alias);
-		process.stdout.write(`${data}`);
-	});
- }
+function executeSync(command, options){
+	execSync(command, options);
+}
 
 /**
- * @param {string} command
+ * @desc Execute task parallel
+ * @param {string} command - Command execute.
+ * @param {object} options - Options process.
  */
-function getCommandForPlatform(command: string): string{
-	if(process.platform === "win32" )
-		return `${command}.cmd`;
-	return command;
+function executeASync(command, options){
+	spawn(command, options);
+}
+
+
+/**
+ * @desc get bin command package local.
+ * @param {string} command - Command execute.
+ * @param {string[]} args - Arguments of command.
+ * @return {string} Command local package.
+ */
+function getBinCommand(command: string, args: string[]){
+	let cmd = path.resolve(`./node_modules/.bin/${command} ${args.join(" ")}`);	
+	return cmd;
 }
