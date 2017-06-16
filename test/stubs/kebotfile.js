@@ -3,7 +3,7 @@ var kebot = require('kebot');
 kebot.task({
 	alias:"css",
 	entry:"./tasks/css.js",
-	sequential:["pug", "sprite"]
+	sequential:["fonts", "pug"]
 });
 
 kebot.task({
@@ -13,29 +13,27 @@ kebot.task({
 
 kebot.task({
 	alias:"pug",
-	//entry:"./tasks/pug.js",
-	command:"babel -w ./src -d ./lib",
-	local:true
+	entry:"./tasks/pug.js"
 });
 
 kebot.task({
-	alias:"sprite",
-	entry:"./tasks/sprite.js"
+	alias:"add",
+	command:"yarn add lodash -g"
 });
 
 kebot.task({
-	alias:"command",
-	command:"yarn add runjs -g"
+	alias:"static",
+	parallel:["fonts", "pug"]
 });
 
 kebot.task({
 	alias:"babel",
-	command: "babel -w ./src -d ./lib",
+	command:"babel -w ./src -d /lib",
 	local:true
 });
 
 kebot.task({
-	alias:'babel-c',
-    command: "babel ./src -d ./lib",
+	alias:"babel2",
+	command:"babel -w ./src/js/index2.js -d /lib",
 	local:true
 });

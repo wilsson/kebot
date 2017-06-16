@@ -2,12 +2,11 @@ import * as chalk from "chalk";
 import * as timestamp from "time-stamp";
 import * as fs from "fs";
 import * as path from "path";
-import { exec } from "child_process";
 import { execSync } from "child_process";
 import { spawn } from "child_process";
 
 /**
- * @desc log error for task
+ * @desc Log error for task
  * @param {string} param - String for log error.
  */
 export function error(param: string): void{
@@ -18,7 +17,9 @@ export function error(param: string): void{
 };
 
 /**
- * @desc log for task
+ * @desc Log for task
+ * @param {string} param - Text for log.
+ * @param {string} time - The time.
  */
 export function log(param: string, time?: string): void{
 	let output: string = "";
@@ -32,18 +33,20 @@ export function log(param: string, time?: string): void{
 }
 
 /**
- * @param {object} object - Object to treat.
+ * @desc Execute task
+ * @param {object} task - Config Task.
+ * @param {string} type - Type task sequential or parallel.
  */
-export function shiftObject(object){
-	let key: string = Object.keys(object)[0];
-	let firstObject = object[key];
-	delete object[key];
-	return firstObject;
-}
+export function execute(task, type: string){
+	let binPath :string = path.resolve("./node_modules/.bin");
+	let execPath : string;
+	let execArgs : string;
+	let command : string;
+	let args: string[];
 
-export function executeSync(param){
 	let options = {
-		stdio: "inherit"
+		stdio: "inherit",
+		shell:true
 	};
 
 	let {
@@ -51,76 +54,49 @@ export function executeSync(param){
 		entry: entry,
 		local: local,
 		alias:alias
-	} = param;
-
-	let execPath: string;
-	let execArgs: string;
+	} = task;
+	
 	if(entry){
 		execPath = process.execPath;
-		execArgs = entry
+		command = `${execPath} ${entry}`
 	}
 	if(cmd){
 		let chunksCommand: string[] = cmd.split(/\s/);
-		let [command, ...args] = chunksCommand;
-		command = getCommandForPlatform(command);
-		execPath = local ? path.resolve(`./node_modules/.bin/${command}`) : command;
-		execArgs = args.join(" ");
+		[command, ...args] = chunksCommand;
+		command = getCommandCrossPlatform(command);
+		command = local ? path.resolve(binPath, command) : command;
+		command = `${command} ${args.join(" ")}`;
 	}
-	var buffer = execSync(`${execPath} ${execArgs}`, options);
-	if(buffer){
-		process.stdout.write(buffer.toString());
+
+	if(type === "sync"){
+		return executeSync(command, options);
 	}
+	return executeASync(command, options);
 }
 
 /**
- * @desc Run the path of your node script.
- * @param {object} param
+ * @desc Execute task sequential
+ * @param {string} command - Command execute.
+ * @param {object} options - Options process.
  */
- export function execute(param): void{
-	let { 
-		that, 
-		task:{
-			command: cmd,
-			entry: entry,
-			local: local,
-			alias:alias
-		}, 
-		tasksRun, 
-		callback
-	} = param;
+function executeSync(command, options){
+	console.log("ejecutando comando >", command);
+	execSync(command, options);
+}
 
-	let execPath: string;
-	let execArgs: string;
-
-	if(entry){
-		execPath = process.execPath;
-		execArgs = entry
-	}
-	if(cmd){
-		let chunksCommand: string[] = cmd.split(/\s/);
-		let [command, ...args] = chunksCommand;
-		command = getCommandForPlatform(command);
-		execPath = local ? path.resolve(`./node_modules/.bin/${command}`) : command;
-		execArgs = args.join(" ");
-	}
-	let cp = exec(`${execPath} ${execArgs}`);
-	cp.stdout.on("data", (data) => {
-		process.stdout.write(`${data}`);
-		if(callback && typeof callback === "function"){
-			callback(tasksRun);
-		}
-	});
-
-	cp.stderr.on('data', (data) => {
-		that.emit("task_error", alias);
-		process.stdout.write(`${data}`);
-	});
- }
+/**
+ * @desc Execute task parallel
+ * @param {string} command - Command execute.
+ * @param {object} options - Options process.
+ */
+function executeASync(command, options){
+	spawn(command, options);
+}
 
 /**
  * @param {string} command
  */
-function getCommandForPlatform(command: string): string{
+function getCommandCrossPlatform(command: string): string{
 	if(process.platform === "win32" )
 		return `${command}.cmd`;
 	return command;

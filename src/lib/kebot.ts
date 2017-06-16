@@ -180,17 +180,14 @@ export class Kebot extends EventEmitter{
 	 */
 	initTask(task: Task, option: boolean): void{
 		let { sequential, parallel } = task;
-		let param = {
-			that:this,
-			task:task
-		};
+
 		if (parallel && option) {
 			throw new Error("You can only have sequential dependency tasks");
 		}
 		if (sequential && option) {
 			this.dependenciesTask(task);
 		}else{
-			_.execute(param);
+			_.execute(task, "sync");
 		}
 	}
 
@@ -218,12 +215,21 @@ export class Kebot extends EventEmitter{
 	 * @param {object} tasksRun - tasksRun object dependencies.
 	 */
 	runDependenciesParallel(tasksRun): void{
+		let task: Task;
 		for(let task in tasksRun){
-			let params = {
-				that:this,
-				task:tasksRun[task]
-			};
-			_.execute(params);
+			task = tasksRun[task]
+			_.execute(task, "async");
+		}
+	}
+
+	/**
+	 * @param {object} tasksRun - All configurations to run.
+	 */
+	runDependenciesSequential(tasksRun): void{
+		let task:Task;
+		for(let key in tasksRun){
+			task = tasksRun[key];
+			_.execute(task, "sync");
 		}
 	}
 
@@ -260,6 +266,7 @@ export class Kebot extends EventEmitter{
 		for(let dependence of dependencies){
 			for(let task in this.tasks){
 				if(task === dependence){
+					console.log("this.tasks[task]>", this.tasks[task]);
 					tasksRun[task] = this.tasks[task];
 					break;
 				}
@@ -267,15 +274,4 @@ export class Kebot extends EventEmitter{
 		}
 		return tasksRun;
 	 }
-
-	/**
-	 * @param {object} tasksRun - All configurations to run.
-	 */
-	runDependenciesSequential(tasksRun): void{
-		let task:Task;
-		for(let key in tasksRun){
-			task = tasksRun[key];
-			_.executeSync(task);
-		}
-	}
 }

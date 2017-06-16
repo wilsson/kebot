@@ -1,1 +1,3 @@
-console.log("task sprite");
+setTimeout(function(){
+    console.log("task sprite");
+}, 3000)
