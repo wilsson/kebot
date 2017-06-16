@@ -266,7 +266,7 @@ export class Kebot extends EventEmitter{
 		for(let dependence of dependencies){
 			for(let task in this.tasks){
 				if(task === dependence){
-					console.log("this.tasks[task]>", this.tasks[task]);
+					console.log("this.tasks[task] >", this.tasks[task]);
 					tasksRun[task] = this.tasks[task];
 					break;
 				}
