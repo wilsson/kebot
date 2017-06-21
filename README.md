@@ -171,7 +171,7 @@ kebot.task({
 
 kebot.task({
   alias: "all",
-  parallel: ["watch", "css]
+  parallel: ["watch", "css"]
 });
 ```
 
