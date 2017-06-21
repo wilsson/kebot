@@ -71,7 +71,7 @@ export function execute(task, type: string){
 	if(type === "sync"){
 		return executeSync(command, options);
 	}
-	return executeASync(command, options);
+	return executeAsync(command, options);
 }
 
 /**
@@ -88,7 +88,7 @@ function executeSync(command, options){
  * @param {string} command - Command execute.
  * @param {object} options - Options process.
  */
-function executeASync(command, options){
+function executeAsync(command, options){
 	spawn(command, options);
 }
 
