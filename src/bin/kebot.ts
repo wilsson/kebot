@@ -20,6 +20,8 @@ let cli = new Liftoff({
 });
 
 let argVersion: string = argv.v || argv.version;
+let argHelp: string    = argv.help;
+
 let versionCli: string = require("../package.json").version;
 
 /**
@@ -34,6 +36,7 @@ let callback = (env): void => {
 	} = env;
 	let instKebot;
 	let args;
+
 	if (argVersion && !argv._.length) {
 		util.log(`CLI version ${versionCli}`);
 		if (modulePackage && typeof modulePackage.version !== "undefined") {
@@ -56,8 +59,32 @@ let callback = (env): void => {
 		util.log("No kebotfile found");
 		process.exit();
 	}
+
 	require(configPath);
 	instKebot = require(modulePath);
+
+	if(argHelp){
+		console.log(`\nKebot version: ${versionCli}`);
+		console.log('Kebot usage: kb <task>\n');
+		console.log('Tasks availables:');
+
+		let _tasks = instKebot.tasks;
+		let tasks = [];
+
+		for(let task in _tasks){
+			tasks.push({name:task, description:_tasks[task].description})
+		}
+
+		let maxSpace = tasks.reduce((max:any,p:any)=>p.name.length > max ? p.name.length : max, tasks[0].name.length);
+
+		tasks.forEach(task =>{
+			let numSpaces = maxSpace - task.name.length;
+			console.log(`- kb ${task.name}${createSpaces(numSpaces)} # ${typeof task.description == 'undefined' ? 'No Description' : capitalizeString(task.description)}`);
+		});
+		console.log('\n');
+		process.exit();
+	}
+
 	loadEvents(instKebot);
 	args = {
 		argsKomet: argsKomet,
@@ -68,6 +95,7 @@ let callback = (env): void => {
 	instKebot.start.call(instKebot, args);
 };
 
+
 /**
  * @param {Object} inst - Instance of kebot.
  */
@@ -76,6 +104,22 @@ let loadEvents = (inst): void => {
 		util.error(`Task ${e} not found`);
 	});
 };
+
+/**
+ * @param {Number} total - num of spaces.
+ */
+let createSpaces = (total):string =>{
+	let s = [];
+	for(let i = 0; i < total; i++){
+		s.push(' ');
+	}
+	return s.join('');
+};
+
+/**
+ * @param {String} str - Letters.
+ */
+let capitalizeString = (str) =>str[0].toUpperCase() + str.slice(1);
 
 /**
  * @desc Start aplication.

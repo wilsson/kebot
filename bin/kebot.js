@@ -18,6 +18,7 @@ var cli = new Liftoff({
     extensions: interpret.jsVariants
 });
 var argVersion = argv.v || argv.version;
+var argHelp = argv.help;
 var versionCli = require("../package.json").version;
 /**
  * @desc Callback for initialize aplication.
@@ -49,6 +50,23 @@ var callback = function (env) {
     }
     require(configPath);
     instKebot = require(modulePath);
+    if (argHelp) {
+        console.log("\nKebot version: " + versionCli);
+        console.log('Kebot usage: kb <task>\n');
+        console.log('Tasks availables:');
+        var _tasks = instKebot.tasks;
+        var tasks = [];
+        for (var task in _tasks) {
+            tasks.push({ name: task, description: _tasks[task].description });
+        }
+        var maxSpace_1 = tasks.reduce(function (max, p) { return p.name.length > max ? p.name.length : max; }, tasks[0].name.length);
+        tasks.forEach(function (task) {
+            var numSpaces = maxSpace_1 - task.name.length;
+            console.log("- kb " + task.name + createSpaces(numSpaces) + " # " + (typeof task.description == 'undefined' ? 'No Description' : capitalizeString(task.description)));
+        });
+        console.log('\n');
+        process.exit();
+    }
     loadEvents(instKebot);
     args = {
         argsKomet: argsKomet,
@@ -66,6 +84,20 @@ var loadEvents = function (inst) {
         util.error("Task " + e + " not found");
     });
 };
+/**
+ * @param {Number} total - num of spaces.
+ */
+var createSpaces = function (total) {
+    var s = [];
+    for (var i = 0; i < total; i++) {
+        s.push(' ');
+    }
+    return s.join('');
+};
+/**
+ * @param {String} str - Letters.
+ */
+var capitalizeString = function (str) { return str[0].toUpperCase() + str.slice(1); };
 /**
  * @desc Start aplication.
  */
