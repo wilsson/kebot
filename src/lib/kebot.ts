@@ -126,12 +126,12 @@ export class Kebot extends EventEmitter{
 	}
 	
 	/**
-	 * @desc Creates args variable.
+	 * @desc Creates arguments variable.
 	 * @param {string} args
 	 */
 	createArgs(args: string): void{
 		if(args){
-			process.env.args = args;
+			process.env = args;
 		}
 	}
 
