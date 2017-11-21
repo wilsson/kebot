@@ -9,12 +9,14 @@ var bin = path.join(__dirname, './../bin/kebot');
 var execOption = {
     shell: true
 };
+var execSyncOption = {
+    shell: true
+};;
 
-test('argument miss', (done) => {
-    exec(`$(which node) ${bin} task:args-miss -t`, (err, stdout)=>{
-        expect(stdout.split('\n').slice(1).join('')).toEqual('execute task');
-        done();
-    },execOption);
+test('argument miss', () => {
+    let command = execSync(`$(which node) ${bin} task:args-miss -t`, execSyncOption);
+    console.log('command',command);
+    expect(command.toString().split('\n').slice(1).join('')).toEqual('execute task');
 });
 
 test('argument contain "args" in flag --args', (done) => {
