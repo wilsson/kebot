@@ -1,14 +1,17 @@
 
 
+var exec = require('child_process').exec;
 var execSync = require('child_process').execSync;
+
 var path = require('path');
 
 var bin = path.join(__dirname, './../bin/kebot');
 
-test('argument miss', () => {
-    let command = execSync(`$(which node) ${bin} task:args-miss -t`);
-
-    expect(command.toString().split('\n').slice(1).join('')).toEqual('execute task');
+test('argument miss', (done) => {
+    exec(`node ${bin} task:args-miss -t`, (err, stdout)=>{
+        expect(stdout.toString().split('\n').slice(1).join('')).toEqual('execute task');
+        done();
+    });
 });
 
 test('argument contain "args" in flag --args', () => {
