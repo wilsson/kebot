@@ -109,8 +109,8 @@ export class Kebot extends EventEmitter{
 			}
 		}
 		if(foundTask){
-			this.createEnv(envKebot);
 			this.createArgs(argsKomet);
+			this.createEnv(envKebot);
 			type = this.verifyTypeTask(foundTask);
 			switch(type){
 				case TYPE.TASK:

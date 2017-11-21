@@ -1,11 +1,10 @@
 #!/usr/bin/env node
 "use strict";
-
 Object.defineProperty(exports, "__esModule", { value: true });
 var interpret = require("interpret");
 var Liftoff = require("liftoff");
-var path = require('path');
 var util = require("../lib/util");
+var path_1 = require("path");
 var argv = require('minimist')(process.argv.slice(2));
 var argTask = String(argv._[0]);
 var envKebot = argv.env;
@@ -35,13 +34,11 @@ var callback = function (env) {
         }
         process.exit();
     }
-
     // mode testing flag -t
     if (argv.t) {
-        configPath = path.resolve('./test/fixture/kebotfile.js');
-        modulePath = path.resolve('./lib/index.js');
+        configPath = path_1.resolve('./test/fixture/kebotfile.js');
+        modulePath = path_1.resolve('./lib/index.js');
     }
-
     if (!modulePath) {
         util.log("Local kebot not found");
         process.exit();
@@ -50,10 +47,8 @@ var callback = function (env) {
         util.log("No kebotfile found");
         process.exit();
     }
-
     require(configPath);
     instKebot = require(modulePath);
-
     loadEvents(instKebot);
     args = {
         argsKomet: argsKomet,

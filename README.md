@@ -62,6 +62,8 @@ Type: `Array`
 type: `Boolean`
 `local` In `true` : Run a CLI from a locally installed package, just like npm scripts when to use command input. Default `false`
 
+
+
 #### Use cases
 
 - Run any installed CLI, using the `command` property.
@@ -190,25 +192,33 @@ kebot.task({
 });
 ```
 
-Use it in your script with `process.env.production` which is equal to `true`
+#### Accept multiples arguments
+- arguments passed by cli are received through `process.env`
 
+command:
 ```bash
-kb css --env production
+  kb mytask --param 1 --paramtwo valuetwo
 ```
 
-- Run a task by passing an argument to your task, use the flag `--args`
-
+kebotfile:
 ```js
 var kebot = require("kebot");
 
 kebot.task({
   alias: "css",
-  entry: "./task/css.js"
+  entry: "./task/args.js"
 });
 ```
 
-Use it in your script with `process.env.args` which is equal to `value`
+task args.js:
+```js
+console.log('my task args');
+console.log(process.env.param); // = 1
+console.log(process.env.paramtwo) // = valuetwo
+```
+
+Use it in your script with `process.env.production` which is equal to `true`
 
 ```bash
-kb css --args value
+kb css --env production
 ```
