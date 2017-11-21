@@ -36,7 +36,8 @@ var callback = function (env) {
         process.exit();
     }
 
-    if(argv.t){
+    // mode testing flag -t
+    if (argv.t) {
         configPath = path.resolve('./test/fixture/kebotfile.js');
         modulePath = path.resolve('./lib/index.js');
     }

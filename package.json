@@ -11,7 +11,6 @@
   },
   "scripts": {
     "test": "jest --verbose",
-    "t": "jest --version",
     "build": "tsc -w",
     "esdoc": "esdoc"
   },
