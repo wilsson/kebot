@@ -17,6 +17,11 @@ test('argument contain "args" in flag --args', () => {
     expect(command.toString().split('\n').slice(1).join('')).toEqual('args');
 });
 
+test('argument environment in flag --env', () => {
+    let command = execSync(`node ${bin} task:env  --env production -t`);
+    expect(command.toString().split('\n').slice(1).join('')).toEqual('true');
+});
+
 test('arguments multiples flags "--email" and "--template"', () => {
     const command = execSync(`node ${bin} task:args-multiple  --email juanpablocs21@gmail.com --template register-action -t`);
     const expected = ['juanpablocs21@gmail.com', 'register-action'];

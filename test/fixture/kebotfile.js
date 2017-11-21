@@ -15,3 +15,8 @@ kebot.task({
 	alias:"task:args-multiple",
 	entry: path.join(__dirname, "./args-multiple-task.js")
 });
+
+kebot.task({
+	alias:"task:env",
+	entry: path.join(__dirname, "./env.js")
+});

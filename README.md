@@ -62,6 +62,13 @@ Type: `Array`
 type: `Boolean`
 `local` In `true` : Run a CLI from a locally installed package, just like npm scripts when to use command input. Default `false`
 
+#### Accept multiple arguments
+
+```
+  kb mytask --param 1 --paramtwo valuetwo
+```
+
+
 #### Use cases
 
 - Run any installed CLI, using the `command` property.
