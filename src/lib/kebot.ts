@@ -81,6 +81,7 @@ export class Kebot extends EventEmitter{
 	 * @param {Object} config - Task configuration object.
 	 * @param {string} config.alias - The alias of your task.
 	 * @param {string} config.entry - The path of your node script.
+	 * @param {string} config.description - Description of task.
 	 * @param {string} config.command - Command to execute.
 	 * @param {Array} config.sequential - Task dependencies sequential.
 	 * @param {Array} config.parallel - Task dependencies parallel.

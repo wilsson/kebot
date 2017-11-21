@@ -3,7 +3,8 @@ var path  = require('path');
 
 kebot.task({
 	alias:"task:args",
-	entry: path.join(__dirname, "./args-task.js")
+	entry: path.join(__dirname, "./args-task.js"),
+	description: "accept flag --arg for valid"
 });
 
 kebot.task({
