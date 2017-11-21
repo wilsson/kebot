@@ -10,12 +10,12 @@ var execOption = {
     shell: true
 };
 var execSyncOption = {
-    stdio: "pipe",
+    stdio: "inherit",
     shell: true
 };;
 
 test('argument miss', () => {
-    let command = execSync(`node ${bin} task:args-miss -t`, execSyncOption);
+    let command = execSync(`$(which node) ${bin} task:args-miss -t`, execSyncOption);
     console.log('command',command);
     expect(command.toString().split('\n').slice(1).join('')).toEqual('execute task');
 });
