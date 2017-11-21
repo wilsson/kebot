@@ -10,7 +10,8 @@
     "test": "test"
   },
   "scripts": {
-    "test": "jest ./test/index.test.js",
+    "test": "jest --verbose",
+    "t": "jest --version",
     "build": "tsc -w",
     "esdoc": "esdoc"
   },
@@ -27,7 +28,7 @@
   "devDependencies": {
     "@types/node": "^7.0.18",
     "esdoc": "^0.5.2",
-    "jest": "^18.1.0",
+    "jest": "^21.2.1",
     "typescript": "^2.3.2"
   },
   "dependencies": {

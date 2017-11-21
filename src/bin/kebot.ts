@@ -3,12 +3,13 @@
 import * as interpret from "interpret";
 import * as Liftoff from "liftoff";
 import * as util from "../lib/util";
+import {resolve} from 'path';
 
 let argv = require('minimist')(process.argv.slice(2));
-let argTask: string = String(argv._[0]);
+let argTask: string  = String(argv._[0]);
 let envKebot: string = argv.env;
-let argsKomet: string = argv.args;
-let option: boolean = argv.a || false;
+let argsKomet: any   = argv;
+let option: boolean  = argv.a || false;
 
 /**
  * @desc Instance of Liftoff.
@@ -40,6 +41,13 @@ let callback = (env): void =>{
 		}
 		process.exit();
 	}
+
+	// mode testing flag -t
+	if(argv.t){
+        configPath = resolve('./test/fixture/kebotfile.js');
+        modulePath = resolve('./lib/index.js');
+	}
+	
 	if (!modulePath) {
 		util.log("Local kebot not found");
 		process.exit();
